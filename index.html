@@ -5,696 +5,324 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Vehicle Manager</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;width:100%;overflow-x:hidden;}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#0f0f0f;color:#e0e0e0;font-size:14px;}
-
-/* HEADER */
-.hdr{background:#111;padding:12px 12px 0;border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:100;}
-.htitle{text-align:center;color:#1db954;font-size:17px;font-weight:bold;letter-spacing:1px;}
-.hsub{text-align:center;color:#444;font-size:10px;margin:2px 0 10px;}
-
-/* TABS - horizontal scroll */
-.tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;padding:7px 13px;border:1px solid #252525;border-radius:20px;background:#1a1a1a;color:#555;font-size:11px;font-weight:bold;cursor:pointer;white-space:nowrap;-webkit-user-select:none;user-select:none;}
-.tab.on{background:#1db954;color:#000;border-color:#1db954;}
-
-/* CONTENT */
-.content{padding:12px 10px 90px;}
-.page{display:none;}.page.on{display:block;}
-
-/* CARDS */
-.card{background:#161616;border:1px solid #222;border-radius:14px;padding:14px;margin-bottom:12px;}
-.ct{color:#1db954;font-size:13px;font-weight:bold;margin-bottom:12px;}
-
-/* FORM */
-.lb{font-size:10px;color:#555;font-weight:bold;text-transform:uppercase;margin-bottom:3px;display:block;letter-spacing:.5px;}
-input,select,textarea{width:100%;padding:10px 12px;margin-bottom:10px;border-radius:9px;border:1px solid #252525;background:#1e1e1e;color:#e0e0e0;font-size:14px;font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;}
-input:focus,select:focus,textarea:focus{border-color:#1db954;}
-textarea{resize:none;height:58px;}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-
-/* BUTTONS */
-.btn{display:block;width:100%;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;margin-bottom:8px;font-family:inherit;}
-.btn:active{opacity:.75;}
-.g{background:#1db954;color:#000;}
-.b{background:#2471a3;color:#fff;}
-.r{background:#c0392b;color:#fff;}
-.o{background:#ca6f1e;color:#fff;}
-.gy{background:#222;color:#888;border:1px solid #2a2a2a;}
-
-/* VEHICLE TOGGLE */
-.vsel{display:flex;gap:7px;margin-bottom:12px;}
-.vbtn{flex:1;padding:9px 5px;border:2px solid #252525;border-radius:10px;background:#1a1a1a;color:#555;font-size:12px;font-weight:bold;cursor:pointer;text-align:center;-webkit-user-select:none;}
-.vbtn.on{border-color:#1db954;color:#1db954;background:#0a1a0c;}
-.vbtn.on.blue{border-color:#3498db;color:#3498db;background:#080e15;}
-
-/* RESULT BOX */
-.rbox{background:#111;border:1px solid #1db954;border-radius:10px;padding:12px;margin-top:10px;display:none;}
-.rrow{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #1e1e1e;}
-.rtotal{display:flex;justify-content:space-between;padding:10px 0 4px;font-size:16px;font-weight:bold;color:#1db954;}
-
-/* LIST ITEMS */
-.item{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:12px;margin-bottom:8px;}
-.item-h{display:flex;justify-content:space-between;align-items:flex-start;}
-.item-t{font-weight:bold;font-size:13px;}
-.item-s{font-size:11px;color:#555;margin-top:3px;line-height:1.5;}
-.del-btn{background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0;min-width:28px;text-align:right;}
-
-/* BADGES */
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:bold;}
-.bg-r{background:#1f0808;color:#e74c3c;border:1px solid #7b241c;}
-.bg-y{background:#1f1508;color:#f0b429;border:1px solid #7d6608;}
-.bg-g{background:#08170c;color:#1db954;border:1px solid #1a6335;}
-.bg-b{background:#08111f;color:#3498db;border:1px solid #1a4f7a;}
-
-/* STAT GRID */
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-.sc{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:11px;text-align:center;}
-.sv{font-size:18px;font-weight:bold;color:#1db954;}
-.sl{font-size:10px;color:#444;margin-top:3px;}
-
-/* PROGRESS */
-.pbar{height:6px;background:#1e1e1e;border-radius:10px;overflow:hidden;margin-top:7px;}
-.pfill{height:100%;background:#1db954;border-radius:10px;}
-
-/* CHECKBOX */
-.chk-group{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;}
-.chk-label{display:flex;align-items:center;gap:5px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:8px;padding:7px 10px;cursor:pointer;font-size:12px;}
-.chk-label input{width:auto;margin:0;padding:0;accent-color:#1db954;}
-.chk-label.checked{border-color:#1db954;color:#1db954;background:#0a1a0c;}
-
-/* DIVIDER */
-.div{border:none;border-top:1px solid #1e1e1e;margin:12px 0;}
-
-/* COLORS */
-.green{color:#1db954;}.red{color:#e74c3c;}.orange{color:#e67e22;}.yellow{color:#f0b429;}.blue{color:#3498db;}
-
-/* EMPTY */
-.empty{text-align:center;color:#333;padding:24px 0;font-size:13px;}
-
-/* VEHICLE CARDS */
-.vcard{border-radius:14px;padding:14px;margin-bottom:12px;border:2px solid;}
-.vc-p{background:#0b1a0d;border-color:#1db954;}
-.vc-w{background:#0a1020;border-color:#2471a3;}
-
-/* ALERT */
-.alert-box{border-radius:10px;padding:11px 13px;margin-bottom:8px;border-left:4px solid;}
-.al-r{background:#1a0808;border-color:#e74c3c;}
-.al-y{background:#1a1208;border-color:#f0b429;}
-.al-g{background:#091a0c;border-color:#1db954;}
-.al-title{font-size:13px;font-weight:bold;margin-bottom:2px;}
-.al-sub{font-size:11px;color:#777;}
-
-/* REPORT */
-.rpt-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
-.rpt-lbl{font-size:11px;min-width:90px;color:#777;}
-.rpt-track{flex:1;height:18px;background:#1e1e1e;border-radius:6px;overflow:hidden;}
-.rpt-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:bold;min-width:4px;}
-.rf-g{background:#1db954;color:#000;}
-.rf-b{background:#2471a3;color:#fff;}
-.rf-o{background:#ca6f1e;color:#fff;}
-.rpt-val{font-size:11px;min-width:65px;text-align:right;color:#aaa;}
-
-/* TOAST */
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1db954;color:#000;padding:9px 22px;border-radius:25px;font-weight:bold;font-size:13px;opacity:0;transition:opacity .3s;z-index:9999;pointer-events:none;white-space:nowrap;max-width:92%;}
-.toast.on{opacity:1;}
-
-/* LOADING */
-#loading{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f0f;display:flex;align-items:center;justify-content:center;z-index:99999;flex-direction:column;gap:14px;}
-#loading p{color:#1db954;font-size:15px;font-weight:bold;}
-.spin{width:36px;height:36px;border:3px solid #1e1e1e;border-top-color:#1db954;border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-</style>
+<title>Vehicle Manager</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPCEtLSBPdXRlciByaW5nIC0tPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU4IiBmaWxsPSIjMGYwZjBmIiBzdHJva2U9IiMxZGI5NTQiIHN0cm9rZS13aWR0aD0iMi41Ii8+CiAgPCEtLSBJbm5lciBnbG93IHJpbmcgLS0+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTIiIGZpbGw9IiMxMTEiIHN0cm9rZT0iIzFkYjk1NCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNCIvPgoKICA8IS0tIENhciBib2R5IChQcml1cy1zdHlsZSBzaWxob3VldHRlKSAtLT4KICA8cGF0aCBkPSJNMTggNjgKICAgICAgICAgICBRMTggNjIgMjIgNjIKICAgICAgICAgICBMMjggNjIKICAgICAgICAgICBMMzQgNTAKICAgICAgICAgICBMNDAgNDQKICAgICAgICAgICBMNjIgNDIKICAgICAgICAgICBMNzggNDQKICAgICAgICAgICBMODYgNTIKICAgICAgICAgICBMOTIgNjIKICAgICAgICAgICBMOTggNjIKICAgICAgICAgICBRMTAyIDYyIDEwMiA2OAogICAgICAgICAgIEwxMDIgNzYKICAgICAgICAgICBRMTAyIDgwIDk4IDgwCiAgICAgICAgICAgTDIyIDgwCiAgICAgICAgICAgUTE4IDgwIDE4IDc2IFoiCiAgICAgICAgZmlsbD0iIzFkYjk1NCIvPgoKICA8IS0tIFJvb2YgLyBjYWJpbiBkYXJrZXIgc2hhZGUgLS0+CiAgPHBhdGggZD0iTTM0IDYyIEw0MCA0NiBMNjIgNDQgTDc4IDQ2IEw4NiA2MiBaIgogICAgICAgIGZpbGw9IiMxN2EyNDgiLz4KCiAgPCEtLSBXaW5kc2hpZWxkIChmcm9udCkgLS0+CiAgPHBhdGggZD0iTTcyIDYyIEw3OCA0OCBMODYgNTIgTDg4IDYyIFoiCiAgICAgICAgZmlsbD0iIzBhMWEwYyIgb3BhY2l0eT0iMC44NSIvPgoKICA8IS0tIFJlYXIgd2luZG93IC0tPgogIDxwYXRoIGQ9Ik0zNCA2MiBMNDAgNDggTDUyIDQ0IEw1NCA2MiBaIgogICAgICAgIGZpbGw9IiMwYTFhMGMiIG9wYWNpdHk9IjAuODUiLz4KCiAgPCEtLSBNYWluIHdpbmRvdyAtLT4KICA8cGF0aCBkPSJNNTUgNjIgTDU2IDQ0IEw3NCA0NCBMODAgNjIgWiIKICAgICAgICBmaWxsPSIjMGExYTBjIiBvcGFjaXR5PSIwLjg1Ii8+CgogIDwhLS0gV2luZG93IGRpdmlkZXJzIC0tPgogIDxsaW5lIHgxPSI1NSIgeTE9IjQ0IiB4Mj0iNTUiIHkyPSI2MiIgc3Ryb2tlPSIjMWRiOTU0IiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxsaW5lIHgxPSI3MyIgeTE9IjQ0IiB4Mj0iNzMiIHkyPSI2MiIgc3Ryb2tlPSIjMWRiOTU0IiBzdHJva2Utd2lkdGg9IjEuMiIvPgoKICA8IS0tIEZyb250IGJ1bXBlciBkZXRhaWwgLS0+CiAgPHBhdGggZD0iTTk1IDcwIFExMDIgNzAgMTAzIDc0IEwxMDMgNzYgUTEwMyA3OCAxMDAgNzggTDk1IDc4IFoiCiAgICAgICAgZmlsbD0iIzE3YTI0OCIvPgoKICA8IS0tIFJlYXIgYnVtcGVyIGRldGFpbCAtLT4KICA8cGF0aCBkPSJNMjUgNzAgUTE4IDcwIDE3IDc0IEwxNyA3NiBRMTcgNzggMjAgNzggTDI1IDc4IFoiCiAgICAgICAgZmlsbD0iIzE3YTI0OCIvPgoKICA8IS0tIEZyb250IGhlYWRsaWdodCAoTEVEIHN0eWxlKSAtLT4KICA8cmVjdCB4PSI5NCIgeT0iNjUiIHdpZHRoPSI5IiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSIjZjBlMDQwIi8+CiAgPHJlY3QgeD0iOTUiIHk9IjY1LjUiIHdpZHRoPSI3IiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC42Ii8+CgogIDwhLS0gUmVhciB0YWlsIGxpZ2h0IC0tPgogIDxyZWN0IHg9IjE3IiB5PSI2NSIgd2lkdGg9IjgiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IiNlNzRjM2MiLz4KICA8cmVjdCB4PSIxOCIgeT0iNjUuNSIgd2lkdGg9IjUiIGhlaWdodD0iMiIgcng9IjEiIGZpbGw9IiNmZjZiNmIiIG9wYWNpdHk9IjAuNSIvPgoKICA8IS0tIEZyb250IHdoZWVsIC0tPgogIDxjaXJjbGUgY3g9Ijc5IiBjeT0iODAiIHI9IjEzIiBmaWxsPSIjMGQwZDBkIiBzdHJva2U9IiMxZGI5NTQiIHN0cm9rZS13aWR0aD0iMS41Ii8+CiAgPGNpcmNsZSBjeD0iNzkiIGN5PSI4MCIgcj0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxjaXJjbGUgY3g9Ijc5IiBjeT0iODAiIHI9IjQiIGZpbGw9IiMyNTI1MjUiLz4KICA8IS0tIFJpbSBzcG9rZXMgLS0+CiAgPGxpbmUgeDE9Ijc5IiB5MT0iNzMiIHgyPSI3OSIgeTI9Ijg3IiBzdHJva2U9IiMxZGI5NTQiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPGxpbmUgeDE9IjcyIiB5MT0iODAiIHgyPSI4NiIgeTI9IjgwIiBzdHJva2U9IiMxZGI5NTQiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPGxpbmUgeDE9Ijc0IiB5MT0iNzUiIHgyPSI4NCIgeTI9Ijg1IiBzdHJva2U9IiMxZGI5NTQiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxsaW5lIHgxPSI4NCIgeTE9Ijc1IiB4Mj0iNzQiIHkyPSI4NSIgc3Ryb2tlPSIjMWRiOTU0IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8Y2lyY2xlIGN4PSI3OSIgY3k9IjgwIiByPSIyIiBmaWxsPSIjMWRiOTU0Ii8+CgogIDwhLS0gUmVhciB3aGVlbCAtLT4KICA8Y2lyY2xlIGN4PSI0MSIgY3k9IjgwIiByPSIxMyIgZmlsbD0iIzBkMGQwZCIgc3Ryb2tlPSIjMWRiOTU0IiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDxjaXJjbGUgY3g9IjQxIiBjeT0iODAiIHI9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8Y2lyY2xlIGN4PSI0MSIgY3k9IjgwIiByPSI0IiBmaWxsPSIjMjUyNTI1Ii8+CiAgPCEtLSBSaW0gc3Bva2VzIC0tPgogIDxsaW5lIHgxPSI0MSIgeTE9IjczIiB4Mj0iNDEiIHkyPSI4NyIgc3Ryb2tlPSIjMWRiOTU0IiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxsaW5lIHgxPSIzNCIgeTE9IjgwIiB4Mj0iNDgiIHkyPSI4MCIgc3Ryb2tlPSIjMWRiOTU0IiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxsaW5lIHgxPSIzNiIgeTE9Ijc1IiB4Mj0iNDYiIHkyPSI4NSIgc3Ryb2tlPSIjMWRiOTU0IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8bGluZSB4MT0iNDYiIHkxPSI3NSIgeDI9IjM2IiB5Mj0iODUiIHN0cm9rZT0iIzFkYjk1NCIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgPGNpcmNsZSBjeD0iNDEiIGN5PSI4MCIgcj0iMiIgZmlsbD0iIzFkYjk1NCIvPgoKICA8IS0tIERvb3IgbGluZSAtLT4KICA8bGluZSB4MT0iNjAiIHkxPSI2MyIgeDI9IjYwIiB5Mj0iNzkiIHN0cm9rZT0iIzE3YTI0OCIgc3Ryb2tlLXdpZHRoPSIxIi8+CgogIDwhLS0gIlZNIiB0ZXh0IGF0IGJvdHRvbSAtLT4KICA8dGV4dCB4PSI2MCIgeT0iMTA4IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIKICAgICAgICBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzFkYjk1NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjMiPlZNPC90ZXh0Pgo8L3N2Zz4K">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}html,body{height:100%;width:100%;overflow-x:hidden}body{font-family:'Segoe UI',Arial,sans-serif;background:#0f0f0f;color:#e0e0e0;font-size:14px}.hdr{background:#111;padding:12px 12px 0;border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:100}.htitle{text-align:center;color:#1db954;font-size:17px;font-weight:bold;letter-spacing:1px}.hsub{text-align:center;color:#444;font-size:10px;margin:2px 0 10px}.tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{flex:0 0 auto;padding:7px 13px;border:1px solid #252525;border-radius:20px;background:#1a1a1a;color:#555;font-size:11px;font-weight:bold;cursor:pointer;white-space:nowrap;-webkit-user-select:none;user-select:none}.tab.on{background:#1db954;color:#000;border-color:#1db954}.content{padding:12px 10px 90px}.page{display:none}.page.on{display:block}.card{background:#161616;border:1px solid #222;border-radius:14px;padding:14px;margin-bottom:12px}.ct{color:#1db954;font-size:13px;font-weight:bold;margin-bottom:12px}.lb{font-size:10px;color:#555;font-weight:bold;text-transform:uppercase;margin-bottom:3px;display:block;letter-spacing:.5px}input,select,textarea{width:100%;padding:10px 12px;margin-bottom:10px;border-radius:9px;border:1px solid #252525;background:#1e1e1e;color:#e0e0e0;font-size:14px;font-family:inherit;outline:none;-webkit-appearance:none;appearance:none}input:focus,select:focus,textarea:focus{border-color:#1db954}textarea{resize:none;height:58px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{display:block;width:100%;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;margin-bottom:8px;font-family:inherit}.btn:active{opacity:.75}.g{background:#1db954;color:#000}.b{background:#2471a3;color:#fff}.r{background:#c0392b;color:#fff}.o{background:#ca6f1e;color:#fff}.gy{background:#222;color:#888;border:1px solid #2a2a2a}.vsel{display:flex;gap:7px;margin-bottom:12px}.vbtn{flex:1;padding:9px 5px;border:2px solid #252525;border-radius:10px;background:#1a1a1a;color:#555;font-size:12px;font-weight:bold;cursor:pointer;text-align:center;-webkit-user-select:none}.vbtn.on{border-color:#1db954;color:#1db954;background:#0a1a0c}.vbtn.on.blue{border-color:#3498db;color:#3498db;background:#080e15}.rbox{background:#111;border:1px solid #1db954;border-radius:10px;padding:12px;margin-top:10px;display:none}.rrow{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #1e1e1e}.rtotal{display:flex;justify-content:space-between;padding:10px 0 4px;font-size:16px;font-weight:bold;color:#1db954}.item{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:12px;margin-bottom:8px}.item-h{display:flex;justify-content:space-between;align-items:flex-start}.item-t{font-weight:bold;font-size:13px}.item-s{font-size:11px;color:#555;margin-top:3px;line-height:1.5}.del-btn{background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0;min-width:28px;text-align:right}.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:bold}.bg-r{background:#1f0808;color:#e74c3c;border:1px solid #7b241c}.bg-y{background:#1f1508;color:#f0b429;border:1px solid #7d6608}.bg-g{background:#08170c;color:#1db954;border:1px solid #1a6335}.bg-b{background:#08111f;color:#3498db;border:1px solid #1a4f7a}.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.sc{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:11px;text-align:center}.sv{font-size:18px;font-weight:bold;color:#1db954}.sl{font-size:10px;color:#444;margin-top:3px}.pbar{height:6px;background:#1e1e1e;border-radius:10px;overflow:hidden;margin-top:7px}.pfill{height:100%;background:#1db954;border-radius:10px}.svc-group{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:10px 12px;margin-bottom:8px}.sg-title{font-size:10px;color:#1db954;font-weight:bold;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #1e1e1e}.svc-row{margin-bottom:4px}.svc-chk-row{display:flex;align-items:center;gap:10px;padding:7px 4px;cursor:pointer;border-radius:7px;-webkit-user-select:none;user-select:none}.svc-chk-row input[type=checkbox]{width:17px;height:17px;flex-shrink:0;margin:0;padding:0;accent-color:#1db954;cursor:pointer}.svc-chk-lbl{font-size:13px;line-height:1.3;flex:1}.svc-chk-row.on .svc-chk-lbl{color:#1db954;font-weight:bold}.brand-inp{display:none;width:100%;padding:7px 11px;margin-top:3px;margin-bottom:2px;border-radius:7px;border:1px solid #1db954;background:#0a1a0c;color:#ccc;font-size:12px;font-family:inherit;outline:none}.brand-inp::placeholder{color:#335}.div{border:none;border-top:1px solid #1e1e1e;margin:12px 0}.green{color:#1db954}.red{color:#e74c3c}.orange{color:#e67e22}.yellow{color:#f0b429}.blue{color:#3498db}.empty{text-align:center;color:#333;padding:24px 0;font-size:13px}.vcard{border-radius:14px;padding:14px;margin-bottom:12px;border:2px solid}.vc-p{background:#0b1a0d;border-color:#1db954}.vc-w{background:#0a1020;border-color:#2471a3}.alert-box{border-radius:10px;padding:11px 13px;margin-bottom:8px;border-left:4px solid}.al-r{background:#1a0808;border-color:#e74c3c}.al-y{background:#1a1208;border-color:#f0b429}.al-g{background:#091a0c;border-color:#1db954}.al-title{font-size:13px;font-weight:bold;margin-bottom:2px}.al-sub{font-size:11px;color:#777}.rpt-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}.rpt-lbl{font-size:11px;min-width:90px;color:#777}.rpt-track{flex:1;height:18px;background:#1e1e1e;border-radius:6px;overflow:hidden}.rpt-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:bold;min-width:4px}.rf-g{background:#1db954;color:#000}.rf-b{background:#2471a3;color:#fff}.rf-o{background:#ca6f1e;color:#fff}.rpt-val{font-size:11px;min-width:65px;text-align:right;color:#aaa}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1db954;color:#000;padding:9px 22px;border-radius:25px;font-weight:bold;font-size:13px;opacity:0;transition:opacity .3s;z-index:9999;pointer-events:none;white-space:nowrap;max-width:92%}.toast.on{opacity:1}#loading{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f0f;display:flex;align-items:center;justify-content:center;z-index:99999;flex-direction:column;gap:14px}#loading p{color:#1db954;font-size:15px;font-weight:bold}.spin{width:36px;height:36px;border:3px solid #1e1e1e;border-top-color:#1db954;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}</style>
 </head>
-<body>
+<body><div id="loading"><div class="spin"></div><p>লোড হচ্ছে...</p></div><div class="hdr"><div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:2px;"><svg width="52" height="52" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><!-- Outer ring --><circle cx="60" cy="60" r="58" fill="#0f0f0f" stroke="#1db954" stroke-width="2.5"/><!-- Inner glow ring --><circle cx="60" cy="60" r="52" fill="#111" stroke="#1db954" stroke-width="0.5" opacity="0.4"/><!-- Car body (Prius-style silhouette) --><path d="M18 68Q18 62 22 62L28 62L34 50L40 44L62 42L78 44L86 52L92 62L98 62Q102 62 102 68L102 76Q102 80 98 80L22 80Q18 80 18 76 Z"fill="#1db954"/><!-- Roof / cabin darker shade --><path d="M34 62 L40 46 L62 44 L78 46 L86 62 Z"fill="#17a248"/><!-- Windshield (front) --><path d="M72 62 L78 48 L86 52 L88 62 Z"fill="#0a1a0c" opacity="0.85"/><!-- Rear window --><path d="M34 62 L40 48 L52 44 L54 62 Z"fill="#0a1a0c" opacity="0.85"/><!-- Main window --><path d="M55 62 L56 44 L74 44 L80 62 Z"fill="#0a1a0c" opacity="0.85"/><!-- Window dividers --><line x1="55" y1="44" x2="55" y2="62" stroke="#1db954" stroke-width="1.2"/><line x1="73" y1="44" x2="73" y2="62" stroke="#1db954" stroke-width="1.2"/><!-- Front bumper detail --><path d="M95 70 Q102 70 103 74 L103 76 Q103 78 100 78 L95 78 Z"fill="#17a248"/><!-- Rear bumper detail --><path d="M25 70 Q18 70 17 74 L17 76 Q17 78 20 78 L25 78 Z"fill="#17a248"/><!-- Front headlight (LED style) --><rect x="94" y="65" width="9" height="4" rx="2" fill="#f0e040"/><rect x="95" y="65.5" width="7" height="2" rx="1" fill="white" opacity="0.6"/><!-- Rear tail light --><rect x="17" y="65" width="8" height="4" rx="2" fill="#e74c3c"/><rect x="18" y="65.5" width="5" height="2" rx="1" fill="#ff6b6b" opacity="0.5"/><!-- Front wheel --><circle cx="79" cy="80" r="13" fill="#0d0d0d" stroke="#1db954" stroke-width="1.5"/><circle cx="79" cy="80" r="8" fill="#1a1a1a"/><circle cx="79" cy="80" r="4" fill="#252525"/><!-- Rim spokes --><line x1="79" y1="73" x2="79" y2="87" stroke="#1db954" stroke-width="1.2"/><line x1="72" y1="80" x2="86" y2="80" stroke="#1db954" stroke-width="1.2"/><line x1="74" y1="75" x2="84" y2="85" stroke="#1db954" stroke-width="1"/><line x1="84" y1="75" x2="74" y2="85" stroke="#1db954" stroke-width="1"/><circle cx="79" cy="80" r="2" fill="#1db954"/><!-- Rear wheel --><circle cx="41" cy="80" r="13" fill="#0d0d0d" stroke="#1db954" stroke-width="1.5"/><circle cx="41" cy="80" r="8" fill="#1a1a1a"/><circle cx="41" cy="80" r="4" fill="#252525"/><!-- Rim spokes --><line x1="41" y1="73" x2="41" y2="87" stroke="#1db954" stroke-width="1.2"/><line x1="34" y1="80" x2="48" y2="80" stroke="#1db954" stroke-width="1.2"/><line x1="36" y1="75" x2="46" y2="85" stroke="#1db954" stroke-width="1"/><line x1="46" y1="75" x2="36" y2="85" stroke="#1db954" stroke-width="1"/><circle cx="41" cy="80" r="2" fill="#1db954"/><!-- Door line --><line x1="60" y1="63" x2="60" y2="79" stroke="#17a248" stroke-width="1"/><!-- "VM" text at bottom --><text x="60" y="108" font-family="Arial,sans-serif" font-size="11"font-weight="bold" fill="#1db954" text-anchor="middle" letter-spacing="3">VM</text></svg><div><div class="htitle" style="text-align:left;font-size:20px;">Vehicle Manager</div><div class="hsub" style="text-align:left;margin:0;">Toyota Prius Alpha · TVS Wego · ড্রাইভার ট্রাকিং</div></div></div><div class="tabs"><div class="tab on" onclick="goTab('home',this)">🏠 Dashboard</div><div class="tab" onclick="goTab('vehicles',this)">🚗 Vehicles</div><div class="tab" onclick="goTab('driver',this)">👤 Driver</div><div class="tab" onclick="goTab('fuel',this)">⛽ Fuel</div><div class="tab" onclick="goTab('service',this)">🔧 Service</div><div class="tab" onclick="goTab('docs',this)">📋 Documents</div><div class="tab" onclick="goTab('reports',this)">📊 Reports</div></div>
+</div><div class="content"><div id="pg-home" class="page on"><div class="card"><div class="ct">⚠️ সতর্কতা ও রিমাইন্ডার</div><div id="home-alerts"><div class="empty">কোনো সতর্কতা নেই ✅</div></div></div><div class="card"><div class="ct">📊 এই মাসের সারসংক্ষেপ</div><div class="sg"><div class="sc"><div class="sv" id="hs-pf">০ ৳</div><div class="sl">🚗 Prius জ্বালানি</div></div><div class="sc"><div class="sv" id="hs-wf">০ ৳</div><div class="sl">🛵 Wego জ্বালানি</div></div><div class="sc"><div class="sv" id="hs-sv">০ ৳</div><div class="sl">🔧 সার্ভিস খরচ</div></div><div class="sc"><div class="sv" id="hs-sal">০ ৳</div><div class="sl">👤 ড্রাইভার</div></div></div><div style="display:flex;justify-content:space-between;padding:10px 12px;background:#111;border-radius:10px;"><span style="font-weight:bold;">💰 মাসিক মোট খরচ</span><span class="green" style="font-weight:bold;font-size:16px;" id="hs-total">০ ৳</span></div></div><div class="card"><div class="ct">🔄 অগ্রীম বাকি</div><div id="home-adv"><div class="empty">কোনো বকেয়া নেই ✅</div></div></div><div class="card"><div class="ct">🔧 সর্বশেষ সার্ভিস</div><div id="home-svc"><div class="empty">কোনো সার্ভিস রেকর্ড নেই</div></div></div>
+</div><div id="pg-vehicles" class="page"><div class="vcard vc-p"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div><div style="font-size:16px;font-weight:bold;">🚗 Toyota Prius Alpha</div><div style="font-size:11px;color:#444;margin-top:2px;">Hybrid · হাইব্রিড গাড়ি</div></div><span class="badge bg-g">Hybrid</span></div><span class="lb">রেজিস্ট্রেশন নম্বর</span><input type="text" id="prius-reg" placeholder="যেমন: ঢাকা মেট্রো গ ১২-৩৪৫৬"><div class="row2"><div><span class="lb">ক্রয়ের তারিখ</span><input type="date" id="prius-buy"></div><div><span class="lb">মডেল বছর</span><input type="text" id="prius-yr" placeholder="যেমন: 2012"></div></div><div class="div" style="margin:4px 0 10px;"></div><div class="ct" style="font-size:12px;">🔋 হাইব্রিড ব্যাটারি ট্র্যাকার</div><div class="row2"><div><span class="lb">সর্বশেষ চেক</span><input type="date" id="prius-bat"></div><div><span class="lb">পরবর্তী চেক</span><input type="date" id="prius-batnext"></div></div><span class="lb">রঙ / নোট</span><textarea id="prius-note" placeholder="যেমন: Silver, সর্বোচ্চ গতি 160 km/h"></textarea><button class="btn g" onclick="saveVehicle('prius')">💾 Prius তথ্য সেভ করুন</button></div><div class="vcard vc-w"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div><div style="font-size:16px;font-weight:bold;">🛵 TVS Wego</div><div style="font-size:11px;color:#444;margin-top:2px;">Petrol Scooter · পেট্রোল স্কুটি</div></div><span class="badge bg-b">Petrol</span></div><span class="lb">রেজিস্ট্রেশন নম্বর</span><input type="text" id="wego-reg" placeholder="যেমন: ঢাকা মেট্রো ঘ ৭৮-৯০১২"><div class="row2"><div><span class="lb">ক্রয়ের তারিখ</span><input type="date" id="wego-buy"></div><div><span class="lb">মডেল বছর</span><input type="text" id="wego-yr" placeholder="যেমন: 2020"></div></div><span class="lb">রঙ / নোট</span><textarea id="wego-note" placeholder="যেমন: Blue Color, 110cc Engine"></textarea><button class="btn b" onclick="saveVehicle('wego')">💾 Wego তথ্য সেভ করুন</button></div>
+</div><div id="pg-driver" class="page"><div id="drv-advbar" style="display:none;"><div class="card" style="margin-bottom:10px;"><div class="ct">📌 বকেয়া অগ্রীম</div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>মোট অগ্রীম</span><span class="orange" id="da-t">০ ৳</span></div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>ফেরত দিয়েছে</span><span class="green" id="da-r">০ ৳</span></div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;"><span>বাকি আছে</span><span class="orange" id="da-b">০ ৳</span></div><div class="pbar"><div class="pfill" id="da-f" style="width:0%"></div></div></div></div><div class="card"><div class="ct">👤 ড্রাইভারের তথ্য</div><div class="row2"><div><span class="lb">নাম</span><input type="text" id="drv-name" placeholder="ড্রাইভারের নাম"></div><div><span class="lb">ফোন নম্বর</span><input type="text" id="drv-phone" placeholder="01XXXXXXXXX"></div></div><button class="btn g" onclick="saveDrv()">💾 সেভ করুন</button></div><div class="card"><div class="ct">💰 বেতন হিসাব</div><span class="lb">মাস</span><input type="month" id="s-month"><div class="row2"><div><span class="lb">মাসিক বেতন (৳)</span><input type="number" id="s-sal" placeholder="বেতন"></div><div><span class="lb">অগ্রীম কর্তন (৳)</span><input type="number" id="s-adv" value="0"></div></div><div class="row2"><div><span class="lb">অন্যান্য কর্তন (৳)</span><input type="number" id="s-ded" value="0"></div><div><span class="lb">বোনাস (৳)</span><input type="number" id="s-bon" value="0"></div></div><span class="lb">ওভারটাইম (৳)</span><input type="number" id="s-ot" value="0"><div id="sal-eb" style="display:none;background:#1a1200;border:1px solid #f0b429;border-radius:9px;padding:8px 12px;margin-bottom:8px;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:#f0b429;">✏️ সম্পাদনা মোড চলছে</span><button class="btn gy" style="margin:0;width:auto;padding:5px 10px;font-size:11px;" onclick="cancelEdit('sal')">✖ বাতিল</button></div><button class="btn g" id="sal-sb" onclick="calcSalOrUpdate()">📊 হিসাব করুন</button><div class="rbox" id="s-res"><div class="rrow"><span>মাস</span><span id="r-m">—</span></div><div class="rrow"><span>মূল বেতন</span><span id="r-s">—</span></div><div class="rrow"><span>অগ্রীম কর্তন</span><span id="r-a" class="red">—</span></div><div class="rrow"><span>অন্য কর্তন</span><span id="r-dd" class="red">—</span></div><div class="rrow"><span>বোনাস</span><span id="r-bn" class="green">—</span></div><div class="rrow"><span>ওভারটাইম</span><span id="r-ot" class="green">—</span></div><div class="rtotal"><span>নেট প্রদেয়</span><span id="r-n">—</span></div><button class="btn b" style="margin-top:10px;" onclick="saveSal()">💾 সেভ করুন</button></div></div><div class="card"><div class="ct">💸 অগ্রীম দিন</div><div class="row2"><div><span class="lb">তারিখ</span><input type="date" id="adv-dt"></div><div><span class="lb">পরিমাণ (৳)</span><input type="number" id="adv-amt" placeholder="পরিমাণ"></div></div><span class="lb">নোট (ঐচ্ছিক)</span><input type="text" id="adv-nt" placeholder="যেমন: চিকিৎসা"><div id="adv-eb" style="display:none;background:#1a1200;border:1px solid #f0b429;border-radius:9px;padding:8px 12px;margin-bottom:8px;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:#f0b429;">✏️ সম্পাদনা মোড চলছে</span><button class="btn gy" style="margin:0;width:auto;padding:5px 10px;font-size:11px;" onclick="cancelEdit('adv')">✖ বাতিল</button></div><button class="btn o" id="adv-sb" onclick="giveAdv()">➕ অগ্রীম দিন</button></div><div class="card"><div class="ct">🔄 অগ্রীম ফেরত</div><div class="row2"><div><span class="lb">তারিখ</span><input type="date" id="rep-dt"></div><div><span class="lb">পরিমাণ (৳)</span><input type="number" id="rep-amt" placeholder="ফেরতের পরিমাণ"></div></div><span class="lb">নোট (ঐচ্ছিক)</span><input type="text" id="rep-nt" placeholder="নোট"><button class="btn g" onclick="doRep()">✅ ফেরত রেকর্ড</button></div><div class="card"><div class="ct">📋 বেতনের ইতিহাস</div><div id="sal-h"><div class="empty">কোনো রেকর্ড নেই</div></div></div><div class="card"><div class="ct">📋 অগ্রীমের ইতিহাস</div><div id="adv-h"><div class="empty">কোনো রেকর্ড নেই</div></div></div>
+</div><div id="pg-fuel" class="page"><div class="card"><div class="ct">⛽ জ্বালানি লগ</div><div class="vsel"><div class="vbtn on" id="fb-prius" onclick="fuelVSel('prius')">🚗 Prius Alpha</div><div class="vbtn" id="fb-wego" onclick="fuelVSel('wego')">🛵 TVS Wego</div></div><div class="row2"><div><span class="lb">তারিখ</span><input type="date" id="fuel-dt"></div><div><span class="lb">জ্বালানির ধরন</span><select id="fuel-type"><option value="octane">⛽ অকটেন</option><option value="electric">⚡ বিদ্যুৎ (Hybrid)</option></select></div></div><div class="row2"><div><span class="lb">Odometer (km)</span><input type="number" id="fuel-km" placeholder="বর্তমান km" oninput="calcLiveKmpl()"></div><div><span class="lb">পরিমাণ (লিটার)</span><input type="number" id="fuel-qty" placeholder="লিটার" step="0.1" oninput="calcLiveKmpl()"></div></div><div id="kmpl-live" style="display:none;background:#0a1a0c;border:1px solid #1db954;border-radius:10px;padding:10px;margin-bottom:10px;text-align:center;"><div style="font-size:10px;color:#444;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">এই ট্যাংকের মাইলেজ</div><div style="font-size:26px;font-weight:bold;color:#1db954;" id="kmpl-live-val">—</div><div style="font-size:10px;color:#555;">km / লিটার</div><div style="font-size:10px;color:#444;margin-top:3px;" id="kmpl-live-dist"></div></div><span class="lb">মোট খরচ (৳)</span><input type="number" id="fuel-cost" placeholder="খরচ"><div id="fuel-eb" style="display:none;background:#1a1200;border:1px solid #f0b429;border-radius:9px;padding:8px 12px;margin-bottom:8px;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:#f0b429;">✏️ সম্পাদনা মোড চলছে</span><button class="btn gy" style="margin:0;width:auto;padding:5px 10px;font-size:11px;" onclick="cancelEdit('fuel')">✖ বাতিল</button></div><button class="btn b" id="fuel-sb" onclick="saveFuel()">💾 সেভ করুন</button></div><div class="card"><div class="ct">📊 সারসংক্ষেপ</div><div class="vsel"><div class="vbtn on" id="fsb-prius" onclick="fuelSumSel('prius')">🚗 Prius</div><div class="vbtn" id="fsb-wego" onclick="fuelSumSel('wego')">🛵 Wego</div></div><div class="sg"><div class="sc"><div class="sv" id="fsum-cost">০</div><div class="sl">মোট খরচ (৳)</div></div><div class="sc"><div class="sv" id="fsum-litre">০</div><div class="sl">মোট লিটার</div></div><div class="sc"><div class="sv" id="fsum-avg">০</div><div class="sl">গড় ৳/লিটার</div></div><div class="sc"><div class="sv" id="fsum-kmpl">—</div><div class="sl">গড় km/লিটার</div></div></div></div><div class="card"><div class="ct">📋 জ্বালানি ইতিহাস</div><div class="vsel"><div class="vbtn on" id="fhb-prius" onclick="fuelHistSel('prius')">🚗 Prius</div><div class="vbtn" id="fhb-wego" onclick="fuelHistSel('wego')">🛵 Wego</div><div class="vbtn" id="fhb-all" onclick="fuelHistSel('all')">🔍 সব</div></div><div id="fuel-h"><div class="empty">কোনো রেকর্ড নেই</div></div></div>
+</div><div id="pg-service" class="page"><div class="card"><div class="ct">🔧 সার্ভিস রেকর্ড যোগ</div><div class="vsel"><div class="vbtn on" id="svb-prius" onclick="svcVSel('prius')">🚗 Prius Alpha</div><div class="vbtn" id="svb-wego" onclick="svcVSel('wego')">🛵 TVS Wego</div></div><span class="lb">সার্ভিসের তারিখ</span><input type="date" id="svc-dt"><div class="row2"><div><span class="lb">বর্তমান Odometer (km)</span><input type="number" id="svc-km" placeholder="বর্তমান km"></div><div><span class="lb">পরবর্তী সার্ভিস (km)</span><input type="number" id="svc-nkm" placeholder="পরবর্তী km"></div></div><span class="lb">পরবর্তী সার্ভিসের তারিখ</span><input type="date" id="svc-ndt"><span class="lb">পরিবর্তিত আইটেম — ব্র্যান্ড / পরিমাণ সহ বাছাই করুন</span><div id="svc-items"></div><span class="lb">মোট খরচ (৳)</span><input type="number" id="svc-cost" placeholder="সার্ভিস খরচ"><span class="lb">নোট / ব্র্যান্ড</span><textarea id="svc-note" placeholder="নোট / গ্যারেজ"></textarea><div id="svc-eb" style="display:none;background:#1a1200;border:1px solid #f0b429;border-radius:9px;padding:8px 12px;margin-bottom:8px;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:#f0b429;">✏️ সম্পাদনা মোড চলছে</span><button class="btn gy" style="margin:0;width:auto;padding:5px 10px;font-size:11px;" onclick="cancelEdit('svc')">✖ বাতিল</button></div><button class="btn g" id="svc-sb" onclick="saveSvc()">💾 সেভ করুন</button></div><div class="card"><div class="ct">📋 সার্ভিস ইতিহাস</div><div class="vsel"><div class="vbtn on" id="svhb-prius" onclick="svcHistSel('prius')">🚗 Prius</div><div class="vbtn" id="svhb-wego" onclick="svcHistSel('wego')">🛵 Wego</div><div class="vbtn" id="svhb-all" onclick="svcHistSel('all')">🔍 সব</div></div><div id="svc-h"><div class="empty">কোনো রেকর্ড নেই</div></div></div>
+</div><div id="pg-docs" class="page"><div id="doc-summary"></div><div class="card"><div class="ct">📋 নতুন কাগজপত্র যোগ</div><div class="vsel"><div class="vbtn on" id="db-prius" onclick="docVSel('prius')">🚗 Prius Alpha</div><div class="vbtn" id="db-wego" onclick="docVSel('wego')">🛵 TVS Wego</div></div><span class="lb">গাড়ির নিবন্ধন নম্বর</span><div style="display:flex;gap:8px;margin-bottom:10px;"><input type="text" id="doc-reg" placeholder="যেমন: ঢাকা মেট্রো গ ১২-৩৪৫৬" style="margin:0;flex:1;"><button class="btn gy" style="margin:0;width:auto;padding:10px 12px;font-size:12px;white-space:nowrap;" onclick="autoFillReg()">🔖 Auto</button></div><span class="lb">কাগজের ধরন</span><select id="doc-type"><optgroup label="── বীমা (Insurance) ──"><option value="ins_tp">🛡️ তৃতীয় পক্ষ বীমা (3rd Party) — বাধ্যতামূলক</option><option value="ins_comp">🛡️ সমন্বিত বীমা (Comprehensive)</option></optgroup><optgroup label="── BRTA কাগজপত্র ──"><option value="fitness">✅ ফিটনেস সার্টিফিকেট (BRTA)</option><option value="tax">💰 ট্যাক্স টোকেন (Road Tax)</option><option value="registration">📄 রেজিস্ট্রেশন সার্টিফিকেট (BRTA)</option><option value="route">🛣️ রুট পারমিট</option><option value="environment">🌿 পরিবেশ ছাড়পত্র</option></optgroup><optgroup label="── কর ও শুল্ক (Tax & Duty) ──"><option value="ait">🏦 AIT — অগ্রিম আয়কর (Advance Income Tax)</option><option value="sd">📊 সাপ্লিমেন্টারি ডিউটি (Supplementary Duty)</option><option value="cfaf">🤝 আর্থিক সহায়তা তহবিল (Financial Assistance Fund)</option><option value="vat">🧾 মূল্য সংযোজন কর / VAT</option></optgroup><optgroup label="── অন্যান্য ──"><option value="license">🪪 ড্রাইভিং লাইসেন্স (Driver)</option><option value="other">📄 অন্যান্য</option></optgroup></select><span class="lb">সার্টিফিকেট / পলিসি নম্বর</span><input type="text" id="doc-certno" placeholder="Policy/Cert নম্বর"><div class="row2"><div><span class="lb">ইস্যুর তারিখ</span><input type="date" id="doc-issue"></div><div><span class="lb">মেয়াদ শেষের তারিখ</span><input type="date" id="doc-expiry"></div></div><div class="row2"><div><span class="lb">খরচ / প্রিমিয়াম (৳)</span><input type="number" id="doc-cost" placeholder="০"></div><div><span class="lb">⏰ রিমাইন্ডার (দিন আগে)</span><select id="doc-remind"><option value="30">৩০ দিন আগে</option><option value="45">৪৫ দিন আগে</option><option value="60">৬০ দিন আগে</option><option value="90">৯০ দিন আগে</option></select></div></div><span class="lb">নোট (কোম্পানি / অফিস / এজেন্ট)</span><input type="text" id="doc-note" placeholder="কোম্পানি, Agent নম্বর"><div id="doc-eb" style="display:none;background:#1a1200;border:1px solid #f0b429;border-radius:9px;padding:8px 12px;margin-bottom:8px;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:#f0b429;">✏️ সম্পাদনা মোড চলছে</span><button class="btn gy" style="margin:0;width:auto;padding:5px 10px;font-size:11px;" onclick="cancelEdit('doc')">✖ বাতিল</button></div><button class="btn g" id="doc-sb" onclick="saveDoc()">💾 সেভ করুন</button></div><div class="card"><div class="ct">📄 কাগজপত্রের তালিকা</div><div class="vsel"><div class="vbtn on" id="dhb-prius" onclick="docHistSel('prius')">🚗 Prius</div><div class="vbtn" id="dhb-wego" onclick="docHistSel('wego')">🛵 Wego</div><div class="vbtn" id="dhb-all" onclick="docHistSel('all')">🔍 সব</div></div><div id="doc-h"><div class="empty">কোনো রেকর্ড নেই</div></div></div>
+</div><div id="pg-reports" class="page"><div class="card"><div class="ct">📅 মাসিক রিপোর্ট</div><div style="display:flex;gap:8px;margin-bottom:10px;"><input type="month" id="rpt-month" style="margin:0;flex:1;"><button class="btn g" style="margin:0;width:auto;padding:10px 16px;white-space:nowrap;" onclick="genReport()">দেখুন</button></div><div id="rpt-content"><div class="empty">মাস নির্বাচন করুন</div></div></div><div class="card"><div class="ct">📊 বার্ষিক জ্বালানি খরচ তুলনা</div><div id="yearly-rpt"><div class="empty">কোনো ডেটা নেই</div></div></div><div class="card"><div class="ct">💰 সর্বমোট খরচ সারসংক্ষেপ</div><div id="all-time-rpt"><div class="empty">ডেটা লোড হচ্ছে...</div></div></div>
+</div></div>
+<div class="toast" id="tst"></div>
+<div style="text-align:center;padding:18px 10px 30px;border-top:1px solid #1a1a1a;margin-top:10px;">
+  <div style="font-size:11px;color:#333;margin-bottom:4px;">🚗 Vehicle Manager</div>
+  <div style="font-size:11px;color:#1db954;font-weight:bold;">© A.M. Morshed</div>
+  <div style="font-size:10px;color:#2a2a2a;margin-top:2px;">All Rights Reserved</div>
+</div><script>var MEM={};
+function sGet(k){try{var v=localStorage.getItem(k);if(v){MEM[k]=JSON.parse(v);return MEM[k];}}catch(e){}try{var v=sessionStorage.getItem(k);if(v){MEM[k]=JSON.parse(v);return MEM[k];}}catch(e){}return MEM[k]!==undefined?MEM[k]:null;}
+function sSet(k,v){MEM[k]=v;var s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){}try{sessionStorage.setItem(k,s);}catch(e){};}
+var SVC_PRIUS=[
+{g:'🛢️ তেল (Oil / Lubricant)',items:[
+{id:'engOil',l:'ইঞ্জিন ওয়েল',h:'Toyota 0W-20 · 4.2L'},
+{id:'cvtFluid',l:'CVT ট্রান্সমিশন ফ্লুইড',h:'ATF WS · 3L'},
+{id:'psFluid',l:'পাওয়ার স্টিয়ারিং ফ্লুইড',h:'PSF EH · 1L'},
+]},
+{g:'🔩 ফিল্টার (Filter)',items:[
+{id:'oilFilter',l:'ওয়েল ফিল্টার',h:'04152-YZZA6'},
+{id:'airFilter',l:'এয়ার ফিল্টার (ইন্টেক)',h:'Denso AF-5142'},
+{id:'cabinFilter',l:'কেবিন এয়ার ফিল্টার (A/C)',h:'87139-YZZ20'},
+{id:'fuelFilter',l:'ফুয়েল ফিল্টার',h:'23300-21010'},
+]},
+{g:'💧 কুল্যান্ট ও ফ্লুইড (Coolant & Fluid)',items:[
+{id:'coolant',l:'রেডিয়েটর কুল্যান্ট',h:'Super LLC Pink · 2L'},
+{id:'hybcoolant',l:'হাইব্রিড ব্যাটারি কুল্যান্ট',h:'Hybrid Coolant Blue · 1L'},
+{id:'inverterC',l:'Inverter কুল্যান্ট',h:'Inverter Coolant · 1L'},
+{id:'brakeFluid',l:'ব্রেক ফ্লুইড',h:'DOT3 · 500ml'},
+{id:'washer',l:'Windshield Washer ফ্লুইড',h:'Rain-X · 1L'},
+]},
+{g:'🔋 হাইব্রিড সিস্টেম (Hybrid System)',items:[
+{id:'batcheck',l:'হাইব্রিড ব্যাটারি চেক',h:'Health % · সার্ভিস সেন্টার'},
+{id:'hvac',l:'A/C সার্ভিস',h:'R134a Refill'},
+]},
+{g:'🔧 অন্যান্য (Others)',items:[
+{id:'brakePad',l:'ব্রেক প্যাড',h:'Akebono / Brembo'},
+{id:'wiper',l:'ওয়াইপার ব্লেড',h:'Bosch Aerotwin 65cm'},
+{id:'tyre',l:'টায়ার',h:'Bridgestone 195/65R15'},
+{id:'other',l:'অন্যান্য',h:'বিবরণ'},
+]},
+];
+var SVC_WEGO=[
+{g:'🛢️ তেল (Oil / Lubricant)',items:[
+{id:'engOil',l:'ইঞ্জিন ওয়েল',h:'10W-30 · 800ml'},
+{id:'gearOil',l:'গিয়ার ওয়েল',h:'80W-90 · 90ml'},
+{id:'chainLub',l:'CVT / চেইন লুব্রিকেন্ট',h:'WD-40 / Chain Spray'},
+]},
+{g:'🔩 ফিল্টার (Filter)',items:[
+{id:'airFilter',l:'এয়ার ফিল্টার',h:'TVS Air Filter'},
+]},
+{g:'💧 ফ্লুইড (Fluid)',items:[
+{id:'brakeFluid',l:'ব্রেক ফ্লুইড',h:'DOT3 · 100ml'},
+]},
+{g:'🔧 অন্যান্য (Others)',items:[
+{id:'spark',l:'স্পার্ক প্লাগ',h:'NGK CPR8EA-9'},
+{id:'belt',l:'CVT ড্রাইভ বেল্ট',h:'TVS Drive Belt'},
+{id:'brakeShoe',l:'ব্রেক শু',h:'TVS Brake Shoe'},
+{id:'tyrep',l:'টায়ার প্রেশার চেক',h:'F:25psi · R:33psi'},
+{id:'tyre',l:'টায়ার পরিবর্তন',h:'MRF 90/90-12'},
+{id:'other',l:'অন্যান্য',h:'বিবরণ'},
+]},
+];
+var DOC_LBL={
+ins_tp:'তৃতীয় পক্ষ বীমা',ins_comp:'সমন্বিত বীমা',
+fitness:'ফিটনেস সার্টিফিকেট',tax:'ট্যাক্স টোকেন',
+registration:'রেজিস্ট্রেশন সার্টিফিকেট',route:'রুট পারমিট',
+environment:'পরিবেশ ছাড়পত্র',ait:'AIT (অগ্রিম আয়কর)',
+sd:'সাপ্লিমেন্টারি ডিউটি',cfaf:'আর্থিক সহায়তা তহবিল',
+vat:'মূল্য সংযোজন কর (VAT)',license:'ড্রাইভিং লাইসেন্স',
+other:'অন্যান্য',insurance:'বীমা'
+};
+var DOC_ICO={
+ins_tp:'🛡️',ins_comp:'🛡️',fitness:'✅',tax:'💰',
+registration:'📄',route:'🛣️',environment:'🌿',
+ait:'🏦',sd:'📊',cfaf:'🤝',vat:'🧾',
+license:'🪪',other:'📋',insurance:'🛡️'
+};
+var V_NAMES={prius:'🚗 Prius Alpha',wego:'🛵 TVS Wego',all:'সব'};
+var fuelV='prius', fuelSumV='prius', fuelHistV='prius';
+var svcV='prius', svcHistV='prius';
+var docV='prius', docHistV='prius';
+function g(id){return document.getElementById(id).value;}
+function s(id,v){var el=document.getElementById(id);if(el)el.value=v;}
+function tst(msg){var el=document.getElementById('tst');el.textContent=msg;el.classList.add('on');setTimeout(function(){el.classList.remove('on');},2600);}
+function fmt(n){return Number(n||0).toLocaleString();}
+function daysLeft(dt){if(!dt)return 9999;var now=new Date();now.setHours(0,0,0,0);var exp=new Date(dt);exp.setHours(0,0,0,0);return Math.round((exp-now)/86400000);}
+function daysBadge(d){
+if(d<0)return '<span class="badge bg-r">মেয়াদ শেষ ('+Math.abs(d)+' দিন আগে)</span>';
+if(d<=15)return '<span class="badge bg-r">⚠️ মাত্র '+d+' দিন বাকি!</span>';
+if(d<=30)return '<span class="badge bg-y">'+d+' দিন বাকি</span>';
+return '<span class="badge bg-g">'+d+' দিন বাকি</span>';
+}
+function thisYM(){var n=new Date();return n.getFullYear()+'-'+(n.getMonth()<9?'0':'')+(n.getMonth()+1);}
+function vBtnSel(pfx,v,ids){ids.forEach(function(id){var el=document.getElementById(pfx+'-'+id);if(el)el.classList.remove('on');});var sel=document.getElementById(pfx+'-'+v);if(sel)sel.classList.add('on');}
+function fuelVSel(v){fuelV=v;vBtnSel('fb',v,['prius','wego']);var ft=document.getElementById('fuel-type');if(v==='prius'){ft.innerHTML='<option value="octane">⛽ অকটেন</option><option value="electric">⚡ বিদ্যুৎ (Hybrid)</option>';}else{ft.innerHTML='<option value="octane">⛽ অকটেন</option>';}}
+function fuelSumSel(v){fuelSumV=v;vBtnSel('fsb',v,['prius','wego']);rFuelSum();}
+function fuelHistSel(v){fuelHistV=v;vBtnSel('fhb',v,['prius','wego','all']);rFuelH();}
+function svcVSel(v){svcV=v;vBtnSel('svb',v,['prius','wego']);buildSvcItems();}
+function svcHistSel(v){svcHistV=v;vBtnSel('svhb',v,['prius','wego','all']);rSvcH();}
+function docVSel(v){docV=v;vBtnSel('db',v,['prius','wego']);}
+function docHistSel(v){docHistV=v;vBtnSel('dhb',v,['prius','wego','all']);rDocH();rDocSummary();}
+function buildSvcItems(){
+var groups=svcV==='prius'?SVC_PRIUS:SVC_WEGO;
+var h='';
+groups.forEach(function(grp){
+h+='<div class="svc-group"><div class="sg-title">'+grp.g+'</div>';
+grp.items.forEach(function(it){
+h+='<div class="svc-row">';
+h+='<label class="svc-chk-row" id="srow-'+it.id+'">';
+h+='<input type="checkbox" id="si-'+it.id+'" onchange="onSvcChk(\''+it.id+'\')">';
+h+='<span class="svc-chk-lbl">'+it.l+'</span>';
+h+='</label>';
+h+='<input type="text" class="brand-inp" id="br-'+it.id+'" placeholder="'+it.h+'">';
+h+='</div>';
+});
+h+='</div>';
+});
+document.getElementById('svc-items').innerHTML=h;
+}
+function onSvcChk(id){
+var chk=document.getElementById('si-'+id);
+var lbl=document.getElementById('srow-'+id);
+var inp=document.getElementById('br-'+id);
+if(lbl) lbl.classList.toggle('on',chk.checked);
+if(inp){inp.style.display=chk.checked?'block':'none';if(chk.checked)setTimeout(function(){inp.focus();},40);}
+}
+function saveVehicle(v){
+var d={};
+if(v==='prius') d={reg:g('prius-reg'),buy:g('prius-buy'),yr:g('prius-yr'),bat:g('prius-bat'),batnext:g('prius-batnext'),note:g('prius-note')};
+else d={reg:g('wego-reg'),buy:g('wego-buy'),yr:g('wego-yr'),note:g('wego-note')};
+sSet('vm_v_'+v,d); tst('সেভ হয়েছে ✅');
+}
+function loadVehicles(){
+var p=sGet('vm_v_prius')||{};
+if(p.reg)s('prius-reg',p.reg); if(p.buy)s('prius-buy',p.buy); if(p.yr)s('prius-yr',p.yr);
+if(p.bat)s('prius-bat',p.bat); if(p.batnext)s('prius-batnext',p.batnext); if(p.note)s('prius-note',p.note);
+var w=sGet('vm_v_wego')||{};
+if(w.reg)s('wego-reg',w.reg); if(w.buy)s('wego-buy',w.buy); if(w.yr)s('wego-yr',w.yr); if(w.note)s('wego-note',w.note);
+}
+function saveDrv(){var nm=g('drv-name').trim();if(!nm){tst('নাম লিখুন!');return;}sSet('vm_drv',{n:nm,p:g('drv-phone').trim()});tst('ড্রাইভারের তথ্য সেভ হয়েছে ✅');}
+function loadDrv(){var d=sGet('vm_drv')||{};if(d.n)s('drv-name',d.n);if(d.p)s('drv-phone',d.p);}
+var fuelEI=-1,svcEI=-1,docEI=-1,salEI=-1,advEI=-1;
+var EDIT_BAR='<div class="edit-bar" id="{id}" style="display:none;background:#1a1200;border:1px solid #f0b429;border-radius:9px;padding:9px 12px;margin-bottom:10px;display:none;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:#f0b429;">✏️ সম্পাদনা মোড</span><button class="btn gy" style="margin:0;width:auto;padding:6px 12px;font-size:12px;" onclick="cancelEdit(\'{sec}\')">✖ বাতিল</button></div>';
+function showEditBar(id,sec){var el=document.getElementById(id);if(el){el.style.display='flex';}}
+function cancelEdit(sec){
+  if(sec==='fuel'){fuelEI=-1;var b=document.getElementById('fuel-eb');if(b)b.style.display='none';var sb=document.getElementById('fuel-sb');if(sb)sb.textContent='💾 সেভ করুন';s('fuel-km','');s('fuel-cost','');s('fuel-qty','');document.getElementById('kmpl-live').style.display='none';}
+  if(sec==='svc'){svcEI=-1;var b=document.getElementById('svc-eb');if(b)b.style.display='none';var sb=document.getElementById('svc-sb');if(sb)sb.textContent='💾 সেভ করুন';s('svc-km','');s('svc-nkm','');s('svc-ndt','');s('svc-cost','');s('svc-note','');buildSvcItems();}
+  if(sec==='doc'){docEI=-1;var b=document.getElementById('doc-eb');if(b)b.style.display='none';var sb=document.getElementById('doc-sb');if(sb)sb.textContent='💾 সেভ করুন';s('doc-certno','');s('doc-issue','');s('doc-expiry','');s('doc-cost','');s('doc-note','');}
+  if(sec==='sal'){salEI=-1;var b=document.getElementById('sal-eb');if(b)b.style.display='none';s('s-sal','');s('s-adv','0');s('s-ded','0');s('s-bon','0');s('s-ot','0');document.getElementById('s-res').style.display='none';}
+  if(sec==='adv'){advEI=-1;var b=document.getElementById('adv-eb');if(b)b.style.display='none';s('adv-amt','');s('adv-nt','');}
+  tst('বাতিল করা হয়েছে');
+}
+function editFuel(i){
+  var l=sGet('vm_fuel')||[],r=l[i];if(!r)return;
+  fuelVSel(r.v);fuelEI=i;
+  s('fuel-dt',r.dt||'');s('fuel-km',r.km||'');s('fuel-qty',r.qty||'');s('fuel-cost',r.cost||'');
+  document.getElementById('fuel-type').value=r.ft||'octane';
+  var b=document.getElementById('fuel-eb');if(b)b.style.display='flex';
+  var sb=document.getElementById('fuel-sb');if(sb)sb.textContent='✅ আপডেট করুন';
+  goTab('fuel',document.querySelector('[onclick="goTab(\'fuel\',this)"]'));
+  window.scrollTo(0,0);tst('এন্ট্রি সম্পাদনা করুন ✏️');
+}
+function editSvc(i){
+  var l=sGet('vm_svc')||[],r=l[i];if(!r)return;
+  svcVSel(r.v);svcEI=i;
+  s('svc-dt',r.dt||'');s('svc-km',r.km||'');s('svc-nkm',r.nkm||'');s('svc-ndt',r.ndt||'');s('svc-cost',r.cost||'');s('svc-note',r.note||'');
+  var b=document.getElementById('svc-eb');if(b)b.style.display='flex';
+  var sb=document.getElementById('svc-sb');if(sb)sb.textContent='✅ আপডেট করুন';
+  goTab('service',document.querySelector('[onclick="goTab(\'service\',this)"]'));
+  window.scrollTo(0,0);tst('এন্ট্রি সম্পাদনা করুন ✏️');
+}
+function editDoc(i){
+  var l=sGet('vm_docs')||[],r=l[i];if(!r)return;
+  docVSel(r.v);docEI=i;
+  document.getElementById('doc-type').value=r.type||'ins_tp';
+  s('doc-reg',r.reg||'');s('doc-certno',r.certno||'');s('doc-issue',r.issue||'');s('doc-expiry',r.expiry||'');s('doc-cost',r.cost||'');s('doc-note',r.note||'');
+  document.getElementById('doc-remind').value=r.remind||30;
+  var b=document.getElementById('doc-eb');if(b)b.style.display='flex';
+  var sb=document.getElementById('doc-sb');if(sb)sb.textContent='✅ আপডেট করুন';
+  goTab('docs',document.querySelector('[onclick="goTab(\'docs\',this)"]'));
+  window.scrollTo(0,0);tst('এন্ট্রি সম্পাদনা করুন ✏️');
+}
+function editSal(i){
+  var l=sGet('vm_sal')||[],r=l[i];if(!r)return;
+  salEI=i;
+  s('s-month',r.m||'');s('s-sal',r.s||'');s('s-adv',r.a||0);s('s-ded',r.dd||0);s('s-bon',r.bn||0);s('s-ot',r.ot||0);
+  var b=document.getElementById('sal-eb');if(b)b.style.display='flex';
+  goTab('driver',document.querySelector('[onclick="goTab(\'driver\',this)"]'));
+  window.scrollTo(0,0);tst('বেতন সম্পাদনা করুন ✏️');
+}
+function editAdv(i){
+  var l=sGet('vm_adv')||[],r=l[i];if(!r)return;
+  advEI=i;
+  s('adv-dt',r.dt||'');s('adv-amt',r.a||'');s('adv-nt',r.nt||'');
+  var b=document.getElementById('adv-eb');if(b)b.style.display='flex';
+  var sb=document.getElementById('adv-sb');if(sb)sb.textContent='✅ আপডেট করুন';
+  goTab('driver',document.querySelector('[onclick="goTab(\'driver\',this)"]'));
+  window.scrollTo(0,0);tst('অগ্রীম সম্পাদনা করুন ✏️');
+}
+function getAdv(){var logs=sGet('vm_adv')||[];var gt=0,rt=0;logs.forEach(function(l){if(l.t==='g')gt+=l.a;else rt+=l.a;});return{g:gt,r:rt,b:gt-rt};}
+function updateAdvBar(){
+var info=getAdv(); var w=document.getElementById('drv-advbar');
+if(info.g===0){w.style.display='none';return;}
+w.style.display='block';
+document.getElementById('da-t').textContent=fmt(info.g)+' ৳';
+document.getElementById('da-r').textContent=fmt(info.r)+' ৳';
+document.getElementById('da-b').textContent=fmt(info.b)+' ৳';
+document.getElementById('da-f').style.width=Math.min(100,Math.round(info.r/info.g*100))+'%';
+}
+function giveAdv(){
+var a=parseFloat(g('adv-amt'))||0;
+if(!a){tst('পরিমাণ লিখুন!');return;}
+var now=new Date(); var tm=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+var list=sGet('vm_adv')||[]; list.push({t:'g',a:a,dt:g('adv-dt'),tm:tm,nt:g('adv-nt').trim()});
+sSet('vm_adv',list); s('adv-amt',''); s('adv-nt','');
+updateAdvBar(); rAdvH(); tst(fmt(a)+' ৳ অগ্রীম দেওয়া হয়েছে 💸');
+}
+function doRep(){
+var a=parseFloat(g('rep-amt'))||0;
+if(!a){tst('পরিমাণ লিখুন!');return;}
+var bal=getAdv().b;
+if(a>bal){tst('সর্বোচ্চ '+fmt(bal)+' ৳ ফেরত দেওয়া যাবে!');return;}
+var now=new Date(); var tm=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+var list=sGet('vm_adv')||[]; list.push({t:'r',a:a,dt:g('rep-dt'),tm:tm,nt:g('rep-nt').trim()});
+sSet('vm_adv',list); s('rep-amt',''); s('rep-nt','');
+updateAdvBar(); rAdvH(); tst(fmt(a)+' ৳ ফেরত রেকর্ড হয়েছে ✅');
+}
+function rAdvH(){
+var list=sGet('vm_adv')||[]; var el=document.getElementById('adv-h');
+if(!list.length){el.innerHTML='<div class="empty">কোনো রেকর্ড নেই</div>';return;}
+var h='';
+for(var i=list.length-1;i>=0;i--){
+var r=list[i]; var ig=r.t==='g';
+h+='<div class="item"><div class="item-h"><div><div class="item-t" style="color:'+(ig?'#e67e22':'#1db954')+'">'+(ig?'💸 অগ্রীম':'✅ ফেরত')+' — '+fmt(r.a)+' ৳</div><div class="item-s">'+(r.dt||'')+' '+(r.tm?'⏰'+r.tm:'')+(r.nt?' · '+r.nt:'')+'</div></div><button class="del-btn" onclick="delAdv('+i+')">🗑</button></div></div>';
+}
+el.innerHTML=h;
+}
+function delAdv(i){var l=sGet('vm_adv')||[];l.splice(i,1);sSet('vm_adv',l);updateAdvBar();rAdvH();tst('মুছে ফেলা হয়েছে');}
+var PC=null;
 
-<div id="loading"><div class="spin"></div><p>লোড হচ্ছে...</p></div>
-
-<!-- HEADER + TABS -->
-<div class="hdr">
-  <div class="htitle">🚗 Vehicle Manager</div>
-  <div class="hsub">Toyota Prius Alpha · TVS Wego · ড্রাইভার ট্র্যাকিং</div>
-  <div class="tabs">
-    <div class="tab on"  onclick="goTab('home',this)">🏠 Dashboard</div>
-    <div class="tab"     onclick="goTab('vehicles',this)">🚗 Vehicles</div>
-    <div class="tab"     onclick="goTab('driver',this)">👤 Driver</div>
-    <div class="tab"     onclick="goTab('fuel',this)">⛽ Fuel</div>
-    <div class="tab"     onclick="goTab('service',this)">🔧 Service</div>
-    <div class="tab"     onclick="goTab('docs',this)">📋 Documents</div>
-    <div class="tab"     onclick="goTab('reports',this)">📊 Reports</div>
-  </div>
-</div>
-
-<div class="content">
-
-<!-- ══ DASHBOARD ══════════════════════════════════════════ -->
-<div id="pg-home" class="page on">
-  <div class="card">
-    <div class="ct">⚠️ সতর্কতা ও রিমাইন্ডার</div>
-    <div id="home-alerts"><div class="empty">কোনো সতর্কতা নেই ✅</div></div>
-  </div>
-  <div class="card">
-    <div class="ct">📊 এই মাসের সারসংক্ষেপ</div>
-    <div class="sg">
-      <div class="sc"><div class="sv" id="hs-pf">০ ৳</div><div class="sl">🚗 Prius জ্বালানি</div></div>
-      <div class="sc"><div class="sv" id="hs-wf">০ ৳</div><div class="sl">🛵 Wego জ্বালানি</div></div>
-      <div class="sc"><div class="sv" id="hs-sv">০ ৳</div><div class="sl">🔧 সার্ভিস খরচ</div></div>
-      <div class="sc"><div class="sv" id="hs-sal">০ ৳</div><div class="sl">👤 ড্রাইভার</div></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:10px 12px;background:#111;border-radius:10px;">
-      <span style="font-weight:bold;">💰 মাসিক মোট খরচ</span>
-      <span class="green" style="font-weight:bold;font-size:16px;" id="hs-total">০ ৳</span>
-    </div>
-  </div>
-  <div class="card">
-    <div class="ct">🔄 অগ্রীম বাকি</div>
-    <div id="home-adv"><div class="empty">কোনো বকেয়া নেই ✅</div></div>
-  </div>
-  <div class="card">
-    <div class="ct">🔧 সর্বশেষ সার্ভিস</div>
-    <div id="home-svc"><div class="empty">কোনো সার্ভিস রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ VEHICLES ════════════════════════════════════════════ -->
-<div id="pg-vehicles" class="page">
-  <!-- Prius Alpha -->
-  <div class="vcard vc-p">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div>
-        <div style="font-size:16px;font-weight:bold;">🚗 Toyota Prius Alpha</div>
-        <div style="font-size:11px;color:#444;margin-top:2px;">Hybrid · হাইব্রিড গাড়ি</div>
-      </div>
-      <span class="badge bg-g">Hybrid</span>
-    </div>
-    <span class="lb">রেজিস্ট্রেশন নম্বর</span>
-    <input type="text" id="prius-reg" placeholder="যেমন: ঢাকা মেট্রো গ ১২-৩৪৫৬">
-    <div class="row2">
-      <div><span class="lb">ক্রয়ের তারিখ</span><input type="date" id="prius-buy"></div>
-      <div><span class="lb">মডেল বছর</span><input type="text" id="prius-yr" placeholder="যেমন: 2012"></div>
-    </div>
-    <div class="div" style="margin:4px 0 10px;"></div>
-    <div class="ct" style="font-size:12px;">🔋 হাইব্রিড ব্যাটারি ট্র্যাকার</div>
-    <div class="row2">
-      <div><span class="lb">সর্বশেষ চেক</span><input type="date" id="prius-bat"></div>
-      <div><span class="lb">পরবর্তী চেক</span><input type="date" id="prius-batnext"></div>
-    </div>
-    <span class="lb">রঙ / নোট</span>
-    <textarea id="prius-note" placeholder="যেমন: Silver, সর্বোচ্চ গতি 160 km/h"></textarea>
-    <button class="btn g" onclick="saveVehicle('prius')">💾 Prius তথ্য সেভ করুন</button>
-  </div>
-
-  <!-- TVS Wego -->
-  <div class="vcard vc-w">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div>
-        <div style="font-size:16px;font-weight:bold;">🛵 TVS Wego</div>
-        <div style="font-size:11px;color:#444;margin-top:2px;">Petrol Scooter · পেট্রোল স্কুটি</div>
-      </div>
-      <span class="badge bg-b">Petrol</span>
-    </div>
-    <span class="lb">রেজিস্ট্রেশন নম্বর</span>
-    <input type="text" id="wego-reg" placeholder="যেমন: ঢাকা মেট্রো ঘ ৭৮-৯০১২">
-    <div class="row2">
-      <div><span class="lb">ক্রয়ের তারিখ</span><input type="date" id="wego-buy"></div>
-      <div><span class="lb">মডেল বছর</span><input type="text" id="wego-yr" placeholder="যেমন: 2020"></div>
-    </div>
-    <span class="lb">রঙ / নোট</span>
-    <textarea id="wego-note" placeholder="যেমন: Blue Color, 110cc Engine"></textarea>
-    <button class="btn b" onclick="saveVehicle('wego')">💾 Wego তথ্য সেভ করুন</button>
-  </div>
-</div>
-
-<!-- ══ DRIVER ══════════════════════════════════════════════ -->
-<div id="pg-driver" class="page">
-  <!-- Advance bar -->
-  <div id="drv-advbar" style="display:none;">
-    <div class="card" style="margin-bottom:10px;">
-      <div class="ct">📌 বকেয়া অগ্রীম</div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>মোট অগ্রীম</span><span class="orange" id="da-t">০ ৳</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>ফেরত দিয়েছে</span><span class="green" id="da-r">০ ৳</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;"><span>বাকি আছে</span><span class="orange" id="da-b">০ ৳</span></div>
-      <div class="pbar"><div class="pfill" id="da-f" style="width:0%"></div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="ct">👤 ড্রাইভারের তথ্য</div>
-    <div class="row2">
-      <div><span class="lb">নাম</span><input type="text" id="drv-name" placeholder="ড্রাইভারের নাম"></div>
-      <div><span class="lb">ফোন নম্বর</span><input type="text" id="drv-phone" placeholder="01XXXXXXXXX"></div>
-    </div>
-    <button class="btn g" onclick="saveDrv()">💾 সেভ করুন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">💰 বেতন হিসাব</div>
-    <span class="lb">মাস</span><input type="month" id="s-month">
-    <div class="row2">
-      <div><span class="lb">মাসিক বেতন (৳)</span><input type="number" id="s-sal" placeholder="বেতন"></div>
-      <div><span class="lb">অগ্রীম কর্তন (৳)</span><input type="number" id="s-adv" value="0"></div>
-    </div>
-    <div class="row2">
-      <div><span class="lb">অন্যান্য কর্তন (৳)</span><input type="number" id="s-ded" value="0"></div>
-      <div><span class="lb">বোনাস (৳)</span><input type="number" id="s-bon" value="0"></div>
-    </div>
-    <span class="lb">ওভারটাইম (৳)</span><input type="number" id="s-ot" value="0">
-    <button class="btn g" onclick="calcSal()">📊 হিসাব করুন</button>
-    <div class="rbox" id="s-res">
-      <div class="rrow"><span>মাস</span><span id="r-m">—</span></div>
-      <div class="rrow"><span>মূল বেতন</span><span id="r-s">—</span></div>
-      <div class="rrow"><span>অগ্রীম কর্তন</span><span id="r-a" class="red">—</span></div>
-      <div class="rrow"><span>অন্য কর্তন</span><span id="r-dd" class="red">—</span></div>
-      <div class="rrow"><span>বোনাস</span><span id="r-bn" class="green">—</span></div>
-      <div class="rrow"><span>ওভারটাইম</span><span id="r-ot" class="green">—</span></div>
-      <div class="rtotal"><span>নেট প্রদেয়</span><span id="r-n">—</span></div>
-      <button class="btn b" style="margin-top:10px;" onclick="saveSal()">💾 সেভ করুন</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="ct">💸 অগ্রীম দিন</div>
-    <div class="row2">
-      <div><span class="lb">তারিখ</span><input type="date" id="adv-dt"></div>
-      <div><span class="lb">পরিমাণ (৳)</span><input type="number" id="adv-amt" placeholder="পরিমাণ"></div>
-    </div>
-    <span class="lb">নোট (ঐচ্ছিক)</span><input type="text" id="adv-nt" placeholder="যেমন: চিকিৎসা">
-    <button class="btn o" onclick="giveAdv()">➕ অগ্রীম দিন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">🔄 অগ্রীম ফেরত</div>
-    <div class="row2">
-      <div><span class="lb">তারিখ</span><input type="date" id="rep-dt"></div>
-      <div><span class="lb">পরিমাণ (৳)</span><input type="number" id="rep-amt" placeholder="ফেরতের পরিমাণ"></div>
-    </div>
-    <span class="lb">নোট (ঐচ্ছিক)</span><input type="text" id="rep-nt" placeholder="নোট">
-    <button class="btn g" onclick="doRep()">✅ ফেরত রেকর্ড</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 বেতনের ইতিহাস</div>
-    <div id="sal-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 অগ্রীমের ইতিহাস</div>
-    <div id="adv-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ FUEL ════════════════════════════════════════════════ -->
-<div id="pg-fuel" class="page">
-  <div class="card">
-    <div class="ct">⛽ জ্বালানি লগ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="fb-prius" onclick="fuelVSel('prius')">🚗 Prius Alpha</div>
-      <div class="vbtn" id="fb-wego" onclick="fuelVSel('wego')">🛵 TVS Wego</div>
-    </div>
-    <div class="row2">
-      <div><span class="lb">তারিখ</span><input type="date" id="fuel-dt"></div>
-      <div>
-        <span class="lb">জ্বালানির ধরন</span>
-        <select id="fuel-type">
-          <option value="petrol">⛽ পেট্রোল</option>
-          <option value="electric">⚡ বিদ্যুৎ</option>
-        </select>
-      </div>
-    </div>
-    <div class="row2">
-      <div><span class="lb">Odometer (km)</span><input type="number" id="fuel-km" placeholder="বর্তমান km"></div>
-      <div><span class="lb">পরিমাণ (লিটার)</span><input type="number" id="fuel-qty" placeholder="লিটার" step="0.1"></div>
-    </div>
-    <span class="lb">মোট খরচ (৳)</span><input type="number" id="fuel-cost" placeholder="খরচ">
-    <button class="btn b" onclick="saveFuel()">💾 সেভ করুন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">📊 সারসংক্ষেপ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="fsb-prius" onclick="fuelSumSel('prius')">🚗 Prius</div>
-      <div class="vbtn" id="fsb-wego" onclick="fuelSumSel('wego')">🛵 Wego</div>
-    </div>
-    <div class="sg">
-      <div class="sc"><div class="sv" id="fsum-cost">০</div><div class="sl">মোট খরচ (৳)</div></div>
-      <div class="sc"><div class="sv" id="fsum-litre">০</div><div class="sl">মোট লিটার</div></div>
-      <div class="sc"><div class="sv" id="fsum-avg">০</div><div class="sl">গড় ৳/লিটার</div></div>
-      <div class="sc"><div class="sv" id="fsum-kmpl">—</div><div class="sl">গড় km/লিটার</div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 জ্বালানি ইতিহাস</div>
-    <div class="vsel">
-      <div class="vbtn on" id="fhb-prius" onclick="fuelHistSel('prius')">🚗 Prius</div>
-      <div class="vbtn" id="fhb-wego" onclick="fuelHistSel('wego')">🛵 Wego</div>
-      <div class="vbtn" id="fhb-all" onclick="fuelHistSel('all')">🔍 সব</div>
-    </div>
-    <div id="fuel-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ SERVICE ═════════════════════════════════════════════ -->
-<div id="pg-service" class="page">
-  <div class="card">
-    <div class="ct">🔧 সার্ভিস রেকর্ড যোগ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="svb-prius" onclick="svcVSel('prius')">🚗 Prius Alpha</div>
-      <div class="vbtn" id="svb-wego" onclick="svcVSel('wego')">🛵 TVS Wego</div>
-    </div>
-    <span class="lb">সার্ভিসের তারিখ</span><input type="date" id="svc-dt">
-    <div class="row2">
-      <div><span class="lb">বর্তমান Odometer (km)</span><input type="number" id="svc-km" placeholder="বর্তমান km"></div>
-      <div><span class="lb">পরবর্তী সার্ভিস (km)</span><input type="number" id="svc-nkm" placeholder="পরবর্তী km"></div>
-    </div>
-    <span class="lb">পরবর্তী সার্ভিসের তারিখ</span><input type="date" id="svc-ndt">
-    <span class="lb">পরিবর্তিত আইটেম (একাধিক বাছাই করুন)</span>
-    <div class="chk-group" id="svc-items"></div>
-    <span class="lb">মোট খরচ (৳)</span><input type="number" id="svc-cost" placeholder="সার্ভিস খরচ">
-    <span class="lb">নোট / ব্র্যান্ড</span>
-    <textarea id="svc-note" placeholder="যেমন: Total Quartz 5W-30 · 4 লিটার, মিস্ত্রি: করিম গ্যারেজ"></textarea>
-    <button class="btn g" onclick="saveSvc()">💾 সেভ করুন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 সার্ভিস ইতিহাস</div>
-    <div class="vsel">
-      <div class="vbtn on" id="svhb-prius" onclick="svcHistSel('prius')">🚗 Prius</div>
-      <div class="vbtn" id="svhb-wego" onclick="svcHistSel('wego')">🛵 Wego</div>
-      <div class="vbtn" id="svhb-all" onclick="svcHistSel('all')">🔍 সব</div>
-    </div>
-    <div id="svc-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ DOCUMENTS ═══════════════════════════════════════════ -->
-<div id="pg-docs" class="page">
-  <div class="card">
-    <div class="ct">📋 কাগজপত্র যোগ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="db-prius" onclick="docVSel('prius')">🚗 Prius Alpha</div>
-      <div class="vbtn" id="db-wego" onclick="docVSel('wego')">🛵 TVS Wego</div>
-    </div>
-    <span class="lb">কাগজের ধরন</span>
-    <select id="doc-type">
-      <option value="insurance">🛡️ বীমা (Ins.rpt-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:bold;min-width:4px;}
-.rf-g{background:#1db954;color:#000;}
-.rf-b{background:#2471a3;color:#fff;}
-.rf-o{background:#ca6f1e;color:#fff;}
-.rpt-val{font-size:11px;min-width:65px;text-align:right;color:#aaa;}
-
-/* TOAST */
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1db954;color:#000;padding:9px 22px;border-radius:25px;font-weight:bold;font-size:13px;opacity:0;transition:opacity .3s;z-index:9999;pointer-events:none;white-space:nowrap;max-width:92%;}
-.toast.on{opacity:1;}
-
-/* LOADING */
-#loading{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f0f;display:flex;align-items:center;justify-content:center;z-index:99999;flex-direction:column;gap:14px;}
-#loading p{color:#1db954;font-size:15px;font-weight:bold;}
-.spin{width:36px;height:36px;border:3px solid #1e1e1e;border-top-color:#1db954;border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-</style>
-</head>
-<body>
-
-<div id="loading"><div class="spin"></div><p>লোড হচ্ছে...</p></div>
-
-<!-- HEADER + TABS -->
-<div class="hdr">
-  <div class="htitle">🚗 Vehicle Manager</div>
-  <div class="hsub">Toyota Prius Alpha · TVS Wego · ড্রাইভার ট্র্যাকিং</div>
-  <div class="tabs">
-    <div class="tab on"  onclick="goTab('home',this)">🏠 Dashboard</div>
-    <div class="tab"     onclick="goTab('vehicles',this)">🚗 Vehicles</div>
-    <div class="tab"     onclick="goTab('driver',this)">👤 Driver</div>
-    <div class="tab"     onclick="goTab('fuel',this)">⛽ Fuel</div>
-    <div class="tab"     onclick="goTab('service',this)">🔧 Service</div>
-    <div class="tab"     onclick="goTab('docs',this)">📋 Documents</div>
-    <div class="tab"     onclick="goTab('reports',this)">📊 Reports</div>
-  </div>
-</div>
-
-<div class="content">
-
-<!-- ══ DASHBOARD ══════════════════════════════════════════ -->
-<div id="pg-home" class="page on">
-  <div class="card">
-    <div class="ct">⚠️ সতর্কতা ও রিমাইন্ডার</div>
-    <div id="home-alerts"><div class="empty">কোনো সতর্কতা নেই ✅</div></div>
-  </div>
-  <div class="card">
-    <div class="ct">📊 এই মাসের সারসংক্ষেপ</div>
-    <div class="sg">
-      <div class="sc"><div class="sv" id="hs-pf">০ ৳</div><div class="sl">🚗 Prius জ্বালানি</div></div>
-      <div class="sc"><div class="sv" id="hs-wf">০ ৳</div><div class="sl">🛵 Wego জ্বালানি</div></div>
-      <div class="sc"><div class="sv" id="hs-sv">০ ৳</div><div class="sl">🔧 সার্ভিস খরচ</div></div>
-      <div class="sc"><div class="sv" id="hs-sal">০ ৳</div><div class="sl">👤 ড্রাইভার</div></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:10px 12px;background:#111;border-radius:10px;">
-      <span style="font-weight:bold;">💰 মাসিক মোট খরচ</span>
-      <span class="green" style="font-weight:bold;font-size:16px;" id="hs-total">০ ৳</span>
-    </div>
-  </div>
-  <div class="card">
-    <div class="ct">🔄 অগ্রীম বাকি</div>
-    <div id="home-adv"><div class="empty">কোনো বকেয়া নেই ✅</div></div>
-  </div>
-  <div class="card">
-    <div class="ct">🔧 সর্বশেষ সার্ভিস</div>
-    <div id="home-svc"><div class="empty">কোনো সার্ভিস রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ VEHICLES ════════════════════════════════════════════ -->
-<div id="pg-vehicles" class="page">
-  <!-- Prius Alpha -->
-  <div class="vcard vc-p">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div>
-        <div style="font-size:16px;font-weight:bold;">🚗 Toyota Prius Alpha</div>
-        <div style="font-size:11px;color:#444;margin-top:2px;">Hybrid · হাইব্রিড গাড়ি</div>
-      </div>
-      <span class="badge bg-g">Hybrid</span>
-    </div>
-    <span class="lb">রেজিস্ট্রেশন নম্বর</span>
-    <input type="text" id="prius-reg" placeholder="যেমন: ঢাকা মেট্রো গ ১২-৩৪৫৬">
-    <div class="row2">
-      <div><span class="lb">ক্রয়ের তারিখ</span><input type="date" id="prius-buy"></div>
-      <div><span class="lb">মডেল বছর</span><input type="text" id="prius-yr" placeholder="যেমন: 2012"></div>
-    </div>
-    <div class="div" style="margin:4px 0 10px;"></div>
-    <div class="ct" style="font-size:12px;">🔋 হাইব্রিড ব্যাটারি ট্র্যাকার</div>
-    <div class="row2">
-      <div><span class="lb">সর্বশেষ চেক</span><input type="date" id="prius-bat"></div>
-      <div><span class="lb">পরবর্তী চেক</span><input type="date" id="prius-batnext"></div>
-    </div>
-    <span class="lb">রঙ / নোট</span>
-    <textarea id="prius-note" placeholder="যেমন: Silver, সর্বোচ্চ গতি 160 km/h"></textarea>
-    <button class="btn g" onclick="saveVehicle('prius')">💾 Prius তথ্য সেভ করুন</button>
-  </div>
-
-  <!-- TVS Wego -->
-  <div class="vcard vc-w">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div>
-        <div style="font-size:16px;font-weight:bold;">🛵 TVS Wego</div>
-        <div style="font-size:11px;color:#444;margin-top:2px;">Petrol Scooter · পেট্রোল স্কুটি</div>
-      </div>
-      <span class="badge bg-b">Petrol</span>
-    </div>
-    <span class="lb">রেজিস্ট্রেশন নম্বর</span>
-    <input type="text" id="wego-reg" placeholder="যেমন: ঢাকা মেট্রো ঘ ৭৮-৯০১২">
-    <div class="row2">
-      <div><span class="lb">ক্রয়ের তারিখ</span><input type="date" id="wego-buy"></div>
-      <div><span class="lb">মডেল বছর</span><input type="text" id="wego-yr" placeholder="যেমন: 2020"></div>
-    </div>
-    <span class="lb">রঙ / নোট</span>
-    <textarea id="wego-note" placeholder="যেমন: Blue Color, 110cc Engine"></textarea>
-    <button class="btn b" onclick="saveVehicle('wego')">💾 Wego তথ্য সেভ করুন</button>
-  </div>
-</div>
-
-<!-- ══ DRIVER ══════════════════════════════════════════════ -->
-<div id="pg-driver" class="page">
-  <!-- Advance bar -->
-  <div id="drv-advbar" style="display:none;">
-    <div class="card" style="margin-bottom:10px;">
-      <div class="ct">📌 বকেয়া অগ্রীম</div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>মোট অগ্রীম</span><span class="orange" id="da-t">০ ৳</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>ফেরত দিয়েছে</span><span class="green" id="da-r">০ ৳</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;"><span>বাকি আছে</span><span class="orange" id="da-b">০ ৳</span></div>
-      <div class="pbar"><div class="pfill" id="da-f" style="width:0%"></div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="ct">👤 ড্রাইভারের তথ্য</div>
-    <div class="row2">
-      <div><span class="lb">নাম</span><input type="text" id="drv-name" placeholder="ড্রাইভারের নাম"></div>
-      <div><span class="lb">ফোন নম্বর</span><input type="text" id="drv-phone" placeholder="01XXXXXXXXX"></div>
-    </div>
-    <button class="btn g" onclick="saveDrv()">💾 সেভ করুন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">💰 বেতন হিসাব</div>
-    <span class="lb">মাস</span><input type="month" id="s-month">
-    <div class="row2">
-      <div><span class="lb">মাসিক বেতন (৳)</span><input type="number" id="s-sal" placeholder="বেতন"></div>
-      <div><span class="lb">অগ্রীম কর্তন (৳)</span><input type="number" id="s-adv" value="0"></div>
-    </div>
-    <div class="row2">
-      <div><span class="lb">অন্যান্য কর্তন (৳)</span><input type="number" id="s-ded" value="0"></div>
-      <div><span class="lb">বোনাস (৳)</span><input type="number" id="s-bon" value="0"></div>
-    </div>
-    <span class="lb">ওভারটাইম (৳)</span><input type="number" id="s-ot" value="0">
-    <button class="btn g" onclick="calcSal()">📊 হিসাব করুন</button>
-    <div class="rbox" id="s-res">
-      <div class="rrow"><span>মাস</span><span id="r-m">—</span></div>
-      <div class="rrow"><span>মূল বেতন</span><span id="r-s">—</span></div>
-      <div class="rrow"><span>অগ্রীম কর্তন</span><span id="r-a" class="red">—</span></div>
-      <div class="rrow"><span>অন্য কর্তন</span><span id="r-dd" class="red">—</span></div>
-      <div class="rrow"><span>বোনাস</span><span id="r-bn" class="green">—</span></div>
-      <div class="rrow"><span>ওভারটাইম</span><span id="r-ot" class="green">—</span></div>
-      <div class="rtotal"><span>নেট প্রদেয়</span><span id="r-n">—</span></div>
-      <button class="btn b" style="margin-top:10px;" onclick="saveSal()">💾 সেভ করুন</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="ct">💸 অগ্রীম দিন</div>
-    <div class="row2">
-      <div><span class="lb">তারিখ</span><input type="date" id="adv-dt"></div>
-      <div><span class="lb">পরিমাণ (৳)</span><input type="number" id="adv-amt" placeholder="পরিমাণ"></div>
-    </div>
-    <span class="lb">নোট (ঐচ্ছিক)</span><input type="text" id="adv-nt" placeholder="যেমন: চিকিৎসা">
-    <button class="btn o" onclick="giveAdv()">➕ অগ্রীম দিন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">🔄 অগ্রীম ফেরত</div>
-    <div class="row2">
-      <div><span class="lb">তারিখ</span><input type="date" id="rep-dt"></div>
-      <div><span class="lb">পরিমাণ (৳)</span><input type="number" id="rep-amt" placeholder="ফেরতের পরিমাণ"></div>
-    </div>
-    <span class="lb">নোট (ঐচ্ছিক)</span><input type="text" id="rep-nt" placeholder="নোট">
-    <button class="btn g" onclick="doRep()">✅ ফেরত রেকর্ড</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 বেতনের ইতিহাস</div>
-    <div id="sal-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 অগ্রীমের ইতিহাস</div>
-    <div id="adv-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ FUEL ════════════════════════════════════════════════ -->
-<div id="pg-fuel" class="page">
-  <div class="card">
-    <div class="ct">⛽ জ্বালানি লগ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="fb-prius" onclick="fuelVSel('prius')">🚗 Prius Alpha</div>
-      <div class="vbtn" id="fb-wego" onclick="fuelVSel('wego')">🛵 TVS Wego</div>
-    </div>
-    <div class="row2">
-      <div><span class="lb">তারিখ</span><input type="date" id="fuel-dt"></div>
-      <div>
-        <span class="lb">জ্বালানির ধরন</span>
-        <select id="fuel-type">
-          <option value="petrol">⛽ পেট্রোল</option>
-          <option value="electric">⚡ বিদ্যুৎ</option>
-        </select>
-      </div>
-    </div>
-    <div class="row2">
-      <div><span class="lb">Odometer (km)</span><input type="number" id="fuel-km" placeholder="বর্তমান km"></div>
-      <div><span class="lb">পরিমাণ (লিটার)</span><input type="number" id="fuel-qty" placeholder="লিটার" step="0.1"></div>
-    </div>
-    <span class="lb">মোট খরচ (৳)</span><input type="number" id="fuel-cost" placeholder="খরচ">
-    <button class="btn b" onclick="saveFuel()">💾 সেভ করুন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">📊 সারসংক্ষেপ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="fsb-prius" onclick="fuelSumSel('prius')">🚗 Prius</div>
-      <div class="vbtn" id="fsb-wego" onclick="fuelSumSel('wego')">🛵 Wego</div>
-    </div>
-    <div class="sg">
-      <div class="sc"><div class="sv" id="fsum-cost">০</div><div class="sl">মোট খরচ (৳)</div></div>
-      <div class="sc"><div class="sv" id="fsum-litre">০</div><div class="sl">মোট লিটার</div></div>
-      <div class="sc"><div class="sv" id="fsum-avg">০</div><div class="sl">গড় ৳/লিটার</div></div>
-      <div class="sc"><div class="sv" id="fsum-kmpl">—</div><div class="sl">গড় km/লিটার</div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 জ্বালানি ইতিহাস</div>
-    <div class="vsel">
-      <div class="vbtn on" id="fhb-prius" onclick="fuelHistSel('prius')">🚗 Prius</div>
-      <div class="vbtn" id="fhb-wego" onclick="fuelHistSel('wego')">🛵 Wego</div>
-      <div class="vbtn" id="fhb-all" onclick="fuelHistSel('all')">🔍 সব</div>
-    </div>
-    <div id="fuel-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ SERVICE ═════════════════════════════════════════════ -->
-<div id="pg-service" class="page">
-  <div class="card">
-    <div class="ct">🔧 সার্ভিস রেকর্ড যোগ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="svb-prius" onclick="svcVSel('prius')">🚗 Prius Alpha</div>
-      <div class="vbtn" id="svb-wego" onclick="svcVSel('wego')">🛵 TVS Wego</div>
-    </div>
-    <span class="lb">সার্ভিসের তারিখ</span><input type="date" id="svc-dt">
-    <div class="row2">
-      <div><span class="lb">বর্তমান Odometer (km)</span><input type="number" id="svc-km" placeholder="বর্তমান km"></div>
-      <div><span class="lb">পরবর্তী সার্ভিস (km)</span><input type="number" id="svc-nkm" placeholder="পরবর্তী km"></div>
-    </div>
-    <span class="lb">পরবর্তী সার্ভিসের তারিখ</span><input type="date" id="svc-ndt">
-    <span class="lb">পরিবর্তিত আইটেম (একাধিক বাছাই করুন)</span>
-    <div class="chk-group" id="svc-items"></div>
-    <span class="lb">মোট খরচ (৳)</span><input type="number" id="svc-cost" placeholder="সার্ভিস খরচ">
-    <span class="lb">নোট / ব্র্যান্ড</span>
-    <textarea id="svc-note" placeholder="যেমন: Total Quartz 5W-30 · 4 লিটার, মিস্ত্রি: করিম গ্যারেজ"></textarea>
-    <button class="btn g" onclick="saveSvc()">💾 সেভ করুন</button>
-  </div>
-
-  <div class="card">
-    <div class="ct">📋 সার্ভিস ইতিহাস</div>
-    <div class="vsel">
-      <div class="vbtn on" id="svhb-prius" onclick="svcHistSel('prius')">🚗 Prius</div>
-      <div class="vbtn" id="svhb-wego" onclick="svcHistSel('wego')">🛵 Wego</div>
-      <div class="vbtn" id="svhb-all" onclick="svcHistSel('all')">🔍 সব</div>
-    </div>
-    <div id="svc-h"><div class="empty">কোনো রেকর্ড নেই</div></div>
-  </div>
-</div>
-
-<!-- ══ DOCUMENTS ═══════════════════════════════════════════ -->
-<div id="pg-docs" class="page">
-  <div class="card">
-    <div class="ct">📋 কাগজপত্র যোগ</div>
-    <div class="vsel">
-      <div class="vbtn on" id="db-prius" onclick="docVSel('prius')">🚗 Prius Alpha</div>
-      <div class="vbtn" id="db-wego" onclick="docVSel('wego')">🛵 TVS Wego</div>
-    </div>
-    <span class="lb">কাগজের ধরন</span>
-    <select id="doc-type">
-      <option value="insurance">🛡️ বীমা (Insvar kmpl=0;
+function calcSalOrUpdate(){
+if(salEI>=0){
+var sal=parseFloat(g('s-sal'))||0,adv=parseFloat(g('s-adv'))||0,ded=parseFloat(g('s-ded'))||0,bon=parseFloat(g('s-bon'))||0,ot=parseFloat(g('s-ot'))||0,m=g('s-month');
+if(!sal){tst('বেতনের পরিমাণ লিখুন!');return;}
+var net=sal-adv-ded+bon+ot;
+var list=sGet('vm_sal')||[];
+list[salEI]={m:m,s:sal,a:adv,dd:ded,bn:bon,ot:ot,net:net,dt:new Date().toLocaleDateString('bn-BD')};
+sSet('vm_sal',list);cancelEdit('sal');rSalH();tst('বেতন আপডেট হয়েছে ✅');
+}else{calcSal();}
+}
+function calcSal(){
+var sal=parseFloat(g('s-sal'))||0,adv=parseFloat(g('s-adv'))||0,ded=parseFloat(g('s-ded'))||0,bon=parseFloat(g('s-bon'))||0,ot=parseFloat(g('s-ot'))||0,m=g('s-month');
+if(!sal){tst('বেতনের পরিমাণ লিখুন!');return;}
+var net=sal-adv-ded+bon+ot;
+PC={m:m,s:sal,a:adv,dd:ded,bn:bon,ot:ot,net:net,dt:new Date().toLocaleDateString('bn-BD')};
+s('r-m',m||'N/A'); document.getElementById('r-m').textContent=m||'N/A';
+document.getElementById('r-s').textContent=fmt(sal)+' ৳';
+document.getElementById('r-a').textContent=adv>0?'-'+fmt(adv)+' ৳':'০ ৳';
+document.getElementById('r-dd').textContent=ded>0?'-'+fmt(ded)+' ৳':'০ ৳';
+document.getElementById('r-bn').textContent=bon>0?'+'+fmt(bon)+' ৳':'০ ৳';
+document.getElementById('r-ot').textContent=ot>0?'+'+fmt(ot)+' ৳':'০ ৳';
+var ne=document.getElementById('r-n'); ne.textContent=fmt(net)+' ৳'; ne.style.color=net>=0?'#1db954':'#e74c3c';
+document.getElementById('s-res').style.display='block';
+}
+function saveSal(){
+if(!PC)return;
+var list=sGet('vm_sal')||[]; list.push(PC); sSet('vm_sal',list);
+if(PC.a>0){var adv=sGet('vm_adv')||[];adv.push({t:'r',a:PC.a,dt:PC.m||PC.dt,tm:'',nt:'বেতন কর্তন (Auto)'});sSet('vm_adv',adv);}
+tst('বেতন সেভ হয়েছে ✅'); document.getElementById('s-res').style.display='none';
+rSalH(); updateAdvBar(); PC=null;
+}
+function rSalH(){
+var list=sGet('vm_sal')||[]; var el=document.getElementById('sal-h');
+if(!list.length){el.innerHTML='<div class="empty">কোনো রেকর্ড নেই</div>';return;}
+var h='';
+for(var i=list.length-1;i>=0;i--){
+var r=list[i];
+h+='<div class="item"><div class="item-h"><div><div class="item-t">'+r.m+' — নেট: <span class="green">'+fmt(r.net)+' ৳</span></div>';
+h+='<div class="item-s">বেতন '+fmt(r.s)+(r.a?' | কর্তন -'+fmt(r.a):'')+(r.dd?' | অন্য -'+fmt(r.dd):'')+(r.bn?' | বোনাস +'+fmt(r.bn):'')+(r.ot?' | OT +'+fmt(r.ot):'')+'</div></div><button class="del-btn" onclick="delSal('+i+')">🗑</button></div></div>';
+}
+el.innerHTML=h;
+}
+function delSal(i){var l=sGet('vm_sal')||[];l.splice(i,1);sSet('vm_sal',l);rSalH();tst('মুছে ফেলা হয়েছে');}
+function calcLiveKmpl(){
+var km=parseFloat(g('fuel-km'))||0,qty=parseFloat(g('fuel-qty'))||0;
+var liveEl=document.getElementById('kmpl-live');
+if(km<=0||qty<=0){liveEl.style.display='none';return;}
+var list=sGet('vm_fuel')||[];
+var prev=list.filter(function(x){return x.v===fuelV&&x.km>0&&x.km<km;}).sort(function(a,b){return a.km-b.km;});
+if(!prev.length){liveEl.style.display='none';return;}
+var lastKm=prev[prev.length-1].km;
+var dist=km-lastKm;
+var kmpl=dist/qty;
+document.getElementById('kmpl-live-val').textContent=kmpl.toFixed(1);
+document.getElementById('kmpl-live-dist').textContent='দূরত্ব: '+fmt(dist)+' km ('+fmt(lastKm)+' → '+fmt(km)+')';
+liveEl.style.display='block';
+}
+function saveFuel(){
+var cost=parseFloat(g('fuel-cost'))||0,km=parseFloat(g('fuel-km'))||0,qty=parseFloat(g('fuel-qty'))||0;
+if(!cost&&!km){tst('তথ্য পূরণ করুন!');return;}
+var list=sGet('vm_fuel')||[];
+var prev=list.filter(function(x){return x.v===fuelV&&x.km>0&&x.km<km;}).sort(function(a,b){return a.km-b.km;});
+var kmpl=0;
 if(prev.length&&km>0&&qty>0){var lkm=prev[prev.length-1].km;kmpl=parseFloat(((km-lkm)/qty).toFixed(2));}
-list.push({v:fuelV,dt:g('fuel-dt'),ft:g('fuel-type'),km:km,cost:cost,qty:qty,kmpl:kmpl});
-sSet('vm_fuel',list); s('fuel-km',''); s('fuel-cost',''); s('fuel-qty','');
-document.getElementById('kmpl-live').style.display='none';
-rFuelSum(); rFuelH(); tst('জ্বালানি লগ সেভ হয়েছে ✅'+(kmpl>0?' · মাইলেজ: '+kmpl+' km/L':''));
+var entry={v:fuelV,dt:g('fuel-dt'),ft:g('fuel-type'),km:km,cost:cost,qty:qty,kmpl:kmpl};
+if(fuelEI>=0){list[fuelEI]=entry;tst('আপডেট হয়েছে ✅');}
+else{list.push(entry);tst('জ্বালানি লগ সেভ হয়েছে ✅'+(kmpl>0?' · মাইলেজ: '+kmpl+' km/L':''));}
+sSet('vm_fuel',list);cancelEdit('fuel');
+rFuelSum();rFuelH();
 }
 function rFuelSum(){
 var list=sGet('vm_fuel')||[]; var v=fuelSumV;
@@ -733,11 +361,11 @@ var chk=document.getElementById('si-'+it.id);
 if(chk&&chk.checked){var br=document.getElementById('br-'+it.id);items.push({l:it.l,b:br?br.value.trim():''});}
 });});
 if(!dt){tst('তারিখ দিন!');return;}
-if(!items.length&&!note){tst('অন্তত একটি আইটেম বাছাই করুন!');return;}
-var list=sGet('vm_svc')||[]; list.push({v:svcV,dt:dt,km:km,nkm:nkm,ndt:ndt,items:items,cost:cost,note:note});
-sSet('vm_svc',list);
-s('svc-km',''); s('svc-nkm',''); s('svc-ndt',''); s('svc-cost',''); s('svc-note','');
-buildSvcItems(); rSvcH(); tst('সার্ভিস রেকর্ড সেভ হয়েছে ✅');
+var entry={v:svcV,dt:dt,km:km,nkm:nkm,ndt:ndt,items:items,cost:cost,note:note};
+var list=sGet('vm_svc')||[];
+if(svcEI>=0){list[svcEI]=entry;tst('আপডেট হয়েছে ✅');}
+else{list.push(entry);tst('সার্ভিস রেকর্ড সেভ হয়েছে ✅');}
+sSet('vm_svc',list);cancelEdit('svc');rSvcH();
 }
 function rSvcH(){
 var list=sGet('vm_svc')||[]; var v=svcHistV;
@@ -765,7 +393,7 @@ if(r.km) h+='<div class="item-s">📍 '+fmt(r.km)+' km'+(r.nkm?' → পরব�
 if(r.ndt&&!r.nkm) h+='<div class="item-s">📅 পরবর্তী: '+r.ndt+'</div>';
 if(r.cost) h+='<div class="item-s green">💰 খরচ: '+fmt(r.cost)+' ৳</div>';
 if(r.note) h+='<div class="item-s" style="color:#555;">📝 '+r.note+'</div>';
-h+='</div><button class="del-btn" onclick="delSvc('+origIdx[i]+')">🗑</button></div></div>';
+h+='</div><button class="del-btn" onclick="editSvc('+origIdx[i]+')" style="color:#f0b429;">✏️</button><button class="del-btn" onclick="delSvc('+origIdx[i]+')">🗑</button></div></div>';
 }
 el.innerHTML=h;
 }
@@ -778,14 +406,11 @@ else tst('আগে Vehicles ট্যাবে নম্বর প্লেট 
 function saveDoc(){
 var expiry=g('doc-expiry');
 if(!expiry){tst('মেয়াদ শেষের তারিখ দিন!');return;}
+var entry={v:docV,type:g('doc-type'),reg:g('doc-reg').trim(),certno:g('doc-certno').trim(),issue:g('doc-issue'),expiry:expiry,cost:parseFloat(g('doc-cost'))||0,remind:parseInt(g('doc-remind'))||30,note:g('doc-note').trim()};
 var list=sGet('vm_docs')||[];
-list.push({v:docV,type:g('doc-type'),reg:g('doc-reg').trim(),
-certno:g('doc-certno').trim(),issue:g('doc-issue'),expiry:expiry,
-cost:parseFloat(g('doc-cost'))||0,remind:parseInt(g('doc-remind'))||30,
-note:g('doc-note').trim()});
-sSet('vm_docs',list);
-s('doc-certno',''); s('doc-issue',''); s('doc-expiry',''); s('doc-cost',''); s('doc-note','');
-rDocH(); rDocSummary(); tst('কাগজপত্র সেভ হয়েছে ✅');
+if(docEI>=0){list[docEI]=entry;tst('আপডেট হয়েছে ✅');}
+else{list.push(entry);tst('কাগজপত্র সেভ হয়েছে ✅');}
+sSet('vm_docs',list);cancelEdit('doc');rDocH();rDocSummary();
 }
 function rDocH(){
 var list=sGet('vm_docs')||[]; var v=docHistV;
@@ -812,7 +437,7 @@ if(r.cost>0) h+='<div class="item-s">💰 খরচ/প্রিমিয়া�
 h+='<div class="item-s" style="color:#333;">⏰ রিমাইন্ডার: '+(r.remind||30)+' দিন আগে</div>';
 if(r.note) h+='<div class="item-s" style="color:#555;">📝 '+r.note+'</div>';
 h+='</div>';
-h+='<button class="del-btn" onclick="delDoc('+vi+')">🗑</button>';
+h+='<button class="del-btn" onclick="editDoc('+vi+')" style="color:#f0b429;">✏️</button><button class="del-btn" onclick="delDoc('+vi+')">🗑</button>';
 h+='</div></div>';
 });
 el.innerHTML=h;
